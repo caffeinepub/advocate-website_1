@@ -11,6 +11,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import {
   Award,
+  Bell,
   Briefcase,
   Building,
   Building2,
@@ -101,7 +102,7 @@ const SAMPLE_TESTIMONIALS = [
     starRating: 5,
     caseType: "Criminal",
     reviewText:
-      "Excellent legal counsel in my criminal matter. Adv. Upadhyay was prompt, professional, and fought tirelessly for my rights at Tis Hazari District Courts. Highly recommended.",
+      "Excellent legal counsel in my criminal matter. Adv. Upadhyay was prompt, professional, and fought tirelessly for my rights at Tis Hazari Courts. Highly recommended.",
   },
   {
     clientName: "Tarjeet Singh",
@@ -111,7 +112,7 @@ const SAMPLE_TESTIMONIALS = [
       "Adv. Sachin Upadhyay handled my case with great skill and confidence. His knowledge of criminal law is exceptional and he kept me informed at every stage. Very satisfied.",
   },
   {
-    clientName: "Nikhil Tewatia",
+    clientName: "Pankaj Kumar",
     starRating: 5,
     caseType: "Criminal",
     reviewText:
@@ -169,7 +170,7 @@ const PRACTICE_AREAS = [
     icon: Gavel,
     title: "Criminal Law",
     description:
-      "Robust defense and prosecution services for criminal matters including bail, trial advocacy, and appeals before High Courts.",
+      "Robust defense and prosecution services for criminal matters including bail, trials, and appeals before High Courts.",
   },
   {
     icon: Scale,
@@ -221,7 +222,13 @@ const SERVICES = [
     icon: FileText,
     title: "Legal Documentation",
     description:
-      "Precise drafting of agreements, petitions, affidavits, wills, and all legal instruments.",
+      "Precise drafting of agreements, petitions, wills, and all legal instruments.",
+  },
+  {
+    icon: Bell,
+    title: "Legal Notices",
+    description:
+      "Drafting and sending legally sound notices under the Code of Civil Procedure, Contract Act, and other statutes to protect your rights before litigation.",
   },
   {
     icon: Briefcase,
@@ -281,7 +288,7 @@ const STATS = [
 
 /* ── District Courts ── */
 const DISTRICT_COURTS = [
-  "Tis Hazari District Courts (Delhi)",
+  "Tis Hazari Courts (Delhi)",
   "Saket Courts (Delhi)",
   "Karkardooma Courts (Delhi)",
   "Rohini Courts (Delhi)",
@@ -422,7 +429,7 @@ function LegalDisclaimerModal({
               marginBottom: "8px",
             }}
           >
-            Upadhyay Lawz &amp; Consultant
+            UPADHYAY LAW CHAMBERS
           </p>
         </div>
 
@@ -908,11 +915,10 @@ export default function App() {
             >
               <MapPin className="h-3 w-3 text-gold flex-shrink-0" />
               <span className="text-[11px] tracking-wide truncate hidden sm:block">
-                Chamber No. 44, Western Wing, Tis Hazari District Courts, Delhi
-                110054
+                Chamber No. 44, Western Wing, Tis Hazari Courts, Delhi 110054
               </span>
               <span className="text-[11px] tracking-wide truncate sm:hidden">
-                Tis Hazari District Courts, Delhi
+                Tis Hazari Courts, Delhi
               </span>
             </a>
             <div className="w-px h-3.5 bg-gold/20 flex-shrink-0 hidden sm:block" />
@@ -942,11 +948,11 @@ export default function App() {
       <header
         className={`fixed top-[40px] left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-crimson-deep/97 backdrop-blur-md shadow-crimson"
-            : "bg-transparent"
+            ? "bg-crimson-deep/97 backdrop-blur-md shadow-lg shadow-black/30"
+            : "bg-crimson-deep/80 backdrop-blur-sm"
         }`}
       >
-        <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <nav className="container mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           {/* Logo */}
           <button
             type="button"
@@ -958,47 +964,57 @@ export default function App() {
                 scrollTo("#home");
               }
             }}
-            className="flex items-center gap-2 group"
-            aria-label="Upadhyay Lawz & Consultant – Home"
+            className="flex items-center gap-2.5 shrink-0 group"
+            aria-label="UPADHYAY LAW CHAMBERS – Home"
           >
             <img
-              src="/assets/generated/upadhyay-lawz-logo-transparent.dim_200x200.png"
-              alt="Upadhyay Lawz & Consultant"
-              className="h-12 w-auto object-contain"
+              src="/assets/uploads/WhatsApp-Image-2026-03-09-at-3.45.12-PM-1.jpeg"
+              alt="UPADHYAY LAW CHAMBERS"
+              className="h-11 w-auto object-contain"
             />
-            <span className="font-display text-xl font-bold text-gold tracking-wide">
-              Upadhyay Lawz &amp; Consultant
+            <span className="font-display text-lg font-bold text-gold tracking-wider hidden sm:block">
+              UPADHYAY LAW CHAMBERS
             </span>
           </button>
 
           {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-1">
-            {NAV_LINKS.map((link, i) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  data-ocid={NAV_OCIDS[i]}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick(link.href);
-                  }}
-                  className={`px-3 py-2 text-sm transition-colors duration-200 rounded font-display font-medium tracking-wide ${
-                    link.href === "#associates" && page === "associates"
-                      ? "text-gold"
-                      : "text-cream/85 hover:text-gold"
-                  }`}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
+          <ul className="hidden lg:flex items-center gap-0">
+            {NAV_LINKS.map((link, i) => {
+              const isActive =
+                link.href === "#associates" && page === "associates";
+              return (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    data-ocid={NAV_OCIDS[i]}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavClick(link.href);
+                    }}
+                    className={`relative px-4 py-5 text-sm font-display font-medium tracking-wide transition-colors duration-200 block group ${
+                      isActive ? "text-gold" : "text-cream/80 hover:text-gold"
+                    }`}
+                  >
+                    {link.label}
+                    {/* Gold underline indicator */}
+                    <span
+                      className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gold transition-transform duration-200 origin-center ${
+                        isActive
+                          ? "scale-x-100"
+                          : "scale-x-0 group-hover:scale-x-100"
+                      }`}
+                    />
+                  </a>
+                </li>
+              );
+            })}
           </ul>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 shrink-0">
             <Button
               data-ocid="nav.consultation.button"
               onClick={() => scrollTo("#contact")}
-              className="hidden sm:flex bg-gold hover:bg-gold-dark text-crimson-deep font-semibold text-sm px-5 py-2 shadow-gold transition-all duration-200"
+              className="hidden sm:flex bg-gold hover:bg-gold-dark text-crimson-deep font-bold text-sm px-5 py-2.5 shadow-gold transition-all duration-200 tracking-wide"
             >
               Book Consultation
             </Button>
@@ -1006,15 +1022,16 @@ export default function App() {
             {/* Mobile menu toggle */}
             <button
               type="button"
-              className="lg:hidden text-cream p-2"
+              className="lg:hidden flex items-center justify-center text-gold border border-gold/40 hover:border-gold hover:bg-gold/10 rounded p-2 transition-all duration-200 min-w-[44px] min-h-[44px]"
               onClick={() => setMenuOpen((o) => !o)}
-              aria-label="Toggle menu"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
               style={{ touchAction: "manipulation" }}
             >
               {menuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
               )}
             </button>
           </div>
@@ -1024,37 +1041,50 @@ export default function App() {
         <AnimatePresence>
           {menuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="lg:hidden bg-crimson-deep/98 backdrop-blur-md border-t border-white/10"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.22, ease: "easeInOut" }}
+              className="lg:hidden bg-crimson-deep/98 backdrop-blur-md border-t border-gold/20 overflow-hidden"
             >
-              <ul className="container mx-auto px-4 py-4 flex flex-col gap-1">
-                {NAV_LINKS.map((link, i) => (
-                  <li key={link.href}>
-                    <a
-                      href={link.href}
-                      data-ocid={NAV_OCIDS[i]}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleNavClick(link.href);
-                      }}
-                      style={{ touchAction: "manipulation" }}
-                      className={`block px-3 py-2.5 transition-colors rounded font-display ${
-                        link.href === "#associates" && page === "associates"
-                          ? "text-gold"
-                          : "text-cream/85 hover:text-gold"
-                      }`}
+              <ul className="container mx-auto px-2 py-2 flex flex-col">
+                {NAV_LINKS.map((link, i) => {
+                  const isActive =
+                    link.href === "#associates" && page === "associates";
+                  return (
+                    <li
+                      key={link.href}
+                      className="border-b border-white/10 last:border-b-0"
                     >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-                <li className="mt-3">
+                      <a
+                        href={link.href}
+                        data-ocid={NAV_OCIDS[i]}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleNavClick(link.href);
+                        }}
+                        style={{ touchAction: "manipulation" }}
+                        className={`flex items-center gap-3 px-5 py-4 transition-colors duration-150 font-display text-base font-medium ${
+                          isActive
+                            ? "text-gold font-semibold"
+                            : "text-cream/80 hover:text-gold hover:bg-gold/5"
+                        }`}
+                      >
+                        <span
+                          className={`text-xs transition-colors duration-150 ${isActive ? "text-gold" : "text-gold/50"}`}
+                        >
+                          ▸
+                        </span>
+                        {link.label}
+                      </a>
+                    </li>
+                  );
+                })}
+                <li className="px-5 py-4">
                   <Button
                     data-ocid="nav.consultation.button"
                     onClick={() => scrollTo("#contact")}
-                    className="w-full bg-gold hover:bg-gold-dark text-crimson-deep font-semibold"
+                    className="w-full bg-gold hover:bg-gold-dark text-crimson-deep font-bold text-base py-3 shadow-gold tracking-wide"
                   >
                     Book Consultation
                   </Button>
@@ -1084,7 +1114,7 @@ export default function App() {
                 }}
               />
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-crimson-deep/90 via-crimson-deep/80 to-crimson-deep/96" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.15_0.05_245/0.92)] via-[oklch(0.18_0.055_245/0.82)] to-[oklch(0.13_0.045_245/0.96)]" />
 
               {/* Gold line accent */}
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-60" />
@@ -1107,9 +1137,7 @@ export default function App() {
                   transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
                   className="font-display text-3xl sm:text-5xl md:text-7xl font-bold text-cream leading-[1.1] mb-4"
                 >
-                  Upadhyay Lawz
-                  <br />
-                  <span className="text-gold italic">&amp; Consultant</span>
+                  UPADHYAY LAW CHAMBERS
                 </motion.h1>
 
                 <motion.p
@@ -1143,7 +1171,7 @@ export default function App() {
                     size="lg"
                     className="bg-gold hover:bg-gold-dark text-crimson-deep font-bold text-base px-8 py-6 shadow-gold hover:shadow-none transition-all duration-200 rounded-sm"
                   >
-                    Book Free Consultation
+                    Book Consultation
                   </Button>
 
                   {/* ── Highlighted Contact Us button ── */}
@@ -1198,7 +1226,7 @@ export default function App() {
                     href="https://maps.google.com/?q=Tis+Hazari+Courts+Delhi"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 bg-crimson-deep/80 backdrop-blur-sm hover:bg-crimson-mid/80 transition-colors duration-200 px-5 py-3 w-full sm:w-auto border-b sm:border-b-0 sm:border-r border-gold/20"
+                    className="flex items-center gap-2.5 bg-crimson-deep/90 backdrop-blur-sm hover:bg-crimson-mid/90 transition-colors duration-200 px-5 py-3 w-full sm:w-auto border-b sm:border-b-0 sm:border-r border-gold/20"
                   >
                     <MapPin className="h-4 w-4 text-gold flex-shrink-0" />
                     <div className="text-left">
@@ -1206,13 +1234,13 @@ export default function App() {
                         Office
                       </div>
                       <div className="text-cream text-xs leading-snug">
-                        Chamber No. 44, Western Wing, Tis Hazari District Courts
+                        Chamber No. 44, Western Wing, Tis Hazari Courts
                       </div>
                     </div>
                   </a>
                   <a
                     href="tel:+919654083085"
-                    className="flex items-center gap-2.5 bg-crimson-deep/80 backdrop-blur-sm hover:bg-crimson-mid/80 transition-colors duration-200 px-5 py-3 w-full sm:w-auto border-b sm:border-b-0 sm:border-r border-gold/20"
+                    className="flex items-center gap-2.5 bg-crimson-deep/90 backdrop-blur-sm hover:bg-crimson-mid/90 transition-colors duration-200 px-5 py-3 w-full sm:w-auto border-b sm:border-b-0 sm:border-r border-gold/20"
                   >
                     <Phone className="h-4 w-4 text-gold flex-shrink-0" />
                     <div className="text-left">
@@ -1224,7 +1252,7 @@ export default function App() {
                       </div>
                     </div>
                   </a>
-                  <div className="flex items-center gap-2.5 bg-crimson-deep/80 backdrop-blur-sm px-5 py-3 w-full sm:w-auto">
+                  <div className="flex items-center gap-2.5 bg-crimson-deep/90 backdrop-blur-sm px-5 py-3 w-full sm:w-auto">
                     <Clock className="h-4 w-4 text-gold flex-shrink-0" />
                     <div className="text-left">
                       <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
@@ -1316,7 +1344,7 @@ export default function App() {
                         courtroom advocacy, and unwavering commitment to client
                         interests, Adv. Upadhyay has secured favorable outcomes
                         in over 500 cases across diverse legal domains. With 10+
-                        years of dedicated practice, Upadhyay Lawz & Consultant
+                        years of dedicated practice, UPADHYAY LAW CHAMBERS
                         stands as a trusted name in Indian legal services.
                       </p>
 
@@ -1327,7 +1355,7 @@ export default function App() {
                           "Practicing before Supreme Court of India",
                           "Member, Delhi High Court Bar Association",
                           "Specialization in Criminal & Civil Litigation",
-                          "Chamber No. 44, Western Wing, Tis Hazari District Courts, Delhi",
+                          "Chamber No. 44, Western Wing, Tis Hazari Courts, Delhi",
                         ].map((cred) => (
                           <li
                             key={cred}
@@ -1346,7 +1374,7 @@ export default function App() {
                             key={stat.label}
                             className="text-center bg-secondary rounded-sm py-4 px-3"
                           >
-                            <div className="font-display text-2xl font-bold text-crimson-deep">
+                            <div className="font-display text-2xl font-bold text-gold">
                               {stat.value}
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">
@@ -1440,7 +1468,7 @@ export default function App() {
               <div className="container mx-auto px-4">
                 <FadeIn className="text-center mb-14">
                   <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
-                    The Upadhyay Lawz Advantage
+                    The UPADHYAY LAW CHAMBERS Advantage
                   </div>
                   <h2 className="font-display text-4xl font-bold text-foreground">
                     Why Choose Us
@@ -1609,7 +1637,7 @@ export default function App() {
                   </h2>
                   <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
                     What our clients say about their experience working with
-                    Upadhyay Lawz &amp; Consultant.
+                    UPADHYAY LAW CHAMBERS.
                   </p>
                 </FadeIn>
 
@@ -1638,7 +1666,7 @@ export default function App() {
                             <div className="flex items-center justify-between mb-3">
                               <StarRating rating={Number(t.starRating)} />
                               {caseType && (
-                                <span className="text-[10px] font-semibold tracking-wider uppercase bg-crimson-deep/10 text-crimson-deep border border-crimson-deep/20 px-2 py-0.5 rounded-full">
+                                <span className="text-[10px] font-semibold tracking-wider uppercase bg-gold/15 text-gold border border-gold/30 px-2 py-0.5 rounded-full">
                                   {caseType}
                                 </span>
                               )}
@@ -1681,8 +1709,8 @@ export default function App() {
                     Book a Consultation
                   </h2>
                   <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                    Reach out to discuss your legal matter with Upadhyay Lawz
-                    &amp; Consultant. The first consultation is free.
+                    Reach out to discuss your legal matter with UPADHYAY LAW
+                    CHAMBERS. The first consultation is free.
                   </p>
                 </FadeIn>
 
@@ -1817,11 +1845,11 @@ export default function App() {
                       {/* Tis Hazari Court Map */}
                       <div className="mt-2">
                         <div className="text-xs text-gold font-semibold tracking-wider uppercase mb-3">
-                          Location – Tis Hazari District Courts
+                          Location – Tis Hazari Courts
                         </div>
                         <div className="rounded-sm overflow-hidden border border-gold/20 shadow-sm">
                           <iframe
-                            title="Tis Hazari District Courts Location"
+                            title="Tis Hazari Courts Location"
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.168822898716!2d77.21390261508257!3d28.669485982393686!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd0f8e87529d%3A0xd8cc3882cd9e9b69!2sTis%20Hazari%20Court!5e0!3m2!1sen!2sin!4v1680000000000!5m2!1sen!2sin"
                             width="100%"
                             height="200"
@@ -2041,9 +2069,9 @@ export default function App() {
                 <div className="lg:col-span-1">
                   <div className="flex items-center gap-3 mb-4">
                     <img
-                      src="/assets/generated/upadhyay-lawz-logo-transparent.dim_200x200.png"
-                      alt="Upadhyay Lawz & Consultant"
-                      className="h-12 w-auto object-contain"
+                      src="/assets/uploads/WhatsApp-Image-2026-03-09-at-3.45.12-PM-1.jpeg"
+                      alt="UPADHYAY LAW CHAMBERS"
+                      className="h-12 w-auto object-contain rounded"
                     />
                   </div>
                   <p className="text-cream/55 text-sm leading-relaxed">
@@ -2139,8 +2167,8 @@ export default function App() {
 
               <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p className="text-cream/45 text-xs text-center sm:text-left">
-                  © {currentYear} Upadhyay Lawz &amp; Consultant | Adv. Sachin
-                  Upadhyay. All rights reserved.
+                  © {currentYear} UPADHYAY LAW CHAMBERS | Adv. Sachin Upadhyay.
+                  All rights reserved.
                 </p>
                 <p className="text-cream/35 text-xs text-center">
                   Built with <span className="text-red-400">♥</span> using{" "}

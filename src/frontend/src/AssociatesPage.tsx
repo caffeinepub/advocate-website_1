@@ -2,6 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
   Award,
+  Briefcase,
+  Building2,
   CheckCircle2,
   Gavel,
   HeartHandshake,
@@ -69,6 +71,34 @@ const ASSOCIATES = [
       "Family & Matrimonial Law",
     ],
   },
+  {
+    id: "associates.item.3",
+    name: "Adv. Aniket Pandey",
+    initials: "AP",
+    specialization: "Corporate Law & DRT",
+    specialIcon: Briefcase,
+    bio: "Adv. Aniket Pandey is a focused corporate and debt recovery specialist with a commanding presence before the Debt Recovery Tribunal (DRT), Delhi High Court, and district courts across the capital. He advises corporations, banks, and financial institutions on loan recovery, SARFAESI proceedings, and corporate disputes — carrying his expertise seamlessly to any forum across India.",
+    credentials: [
+      "Bar Council of Delhi",
+      "Delhi High Court",
+      "Debt Recovery Tribunal (DRT)",
+      "Corporate & Commercial Law",
+    ],
+  },
+  {
+    id: "associates.item.4",
+    name: "Adv. Prem Grover",
+    initials: "PG",
+    specialization: "Corporate Law & DRT",
+    specialIcon: Building2,
+    bio: "Adv. Prem Grover combines deep corporate law knowledge with extensive experience in Debt Recovery Tribunal (DRT) proceedings, representing banks, NBFCs, and corporate clients in complex financial recovery matters. His practice extends from the Delhi High Court and all district courts of Delhi to tribunals and commercial courts across India, wherever the matter demands.",
+    credentials: [
+      "Bar Council of Delhi",
+      "Delhi High Court",
+      "Debt Recovery Tribunal (DRT)",
+      "Corporate & Financial Law",
+    ],
+  },
 ] as const;
 
 /* ══════════════════════════════════
@@ -122,7 +152,7 @@ export default function AssociatesPage({ onBack }: { onBack: () => void }) {
           >
             <div className="inline-flex items-center gap-2 bg-gold/15 border border-gold/30 text-gold text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-full mb-6">
               <Scale className="h-3.5 w-3.5" />
-              <span>Upadhyay Lawz & Consultant</span>
+              <span>UPADHYAY LAW CHAMBERS</span>
             </div>
 
             <h1 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold text-cream mb-4 leading-tight">
@@ -144,7 +174,7 @@ export default function AssociatesPage({ onBack }: { onBack: () => void }) {
       {/* ─────────── ASSOCIATE CARDS ─────────── */}
       <section className="py-12 md:py-20 bg-background">
         <div className="container mx-auto px-4 max-w-5xl">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid sm:grid-cols-2 gap-8">
             {ASSOCIATES.map((associate, i) => (
               <FadeIn key={associate.id} delay={i * 0.12}>
                 <div
@@ -177,7 +207,7 @@ export default function AssociatesPage({ onBack }: { onBack: () => void }) {
                           {associate.name}
                         </h2>
                         <Badge
-                          className="bg-crimson-deep/10 text-crimson-deep border border-crimson-deep/25 text-[10px] font-semibold tracking-wider uppercase hover:bg-crimson-deep/15 transition-colors"
+                          className="bg-gold/15 text-gold border border-gold/30 text-[10px] font-semibold tracking-wider uppercase hover:bg-gold/25 transition-colors"
                           variant="outline"
                         >
                           {associate.specialization}
@@ -228,7 +258,7 @@ export default function AssociatesPage({ onBack }: { onBack: () => void }) {
               </h3>
               <div className="w-12 h-0.5 bg-gold mx-auto mb-4" />
               <p className="text-muted-foreground text-sm leading-relaxed max-w-2xl mx-auto">
-                Together, the associates of Upadhyay Lawz & Consultant cover the
+                Together, the associates of UPADHYAY LAW CHAMBERS cover the
                 Supreme Court of India, the Delhi High Court, all five district
                 court complexes in Delhi, and through their collective practice
                 network, extend effective legal representation to any court
@@ -245,13 +275,12 @@ export default function AssociatesPage({ onBack }: { onBack: () => void }) {
           <p className="text-muted-foreground text-sm">
             Part of{" "}
             <span className="text-foreground font-display font-semibold">
-              Upadhyay Lawz & Consultant
+              UPADHYAY LAW CHAMBERS
             </span>{" "}
-            — Chamber No. 44, Western Wing, Tis Hazari District Courts, Delhi
-            110054
+            — Chamber No. 44, Western Wing, Tis Hazari Courts, Delhi 110054
           </p>
           <p className="text-muted-foreground/60 text-xs mt-2">
-            © {new Date().getFullYear()} Upadhyay Lawz & Consultant. All rights
+            © {new Date().getFullYear()} UPADHYAY LAW CHAMBERS. All rights
             reserved.
           </p>
         </div>
