@@ -753,8 +753,10 @@ function LegalDisclaimerModal({
    MAIN APP COMPONENT
 ══════════════════════════════════════════════ */
 export default function App() {
-  const [showDisclaimer, setShowDisclaimer] = useState(
-    () => !localStorage.getItem("ulc_disclaimer_agreed"),
+  const isAdmin =
+    new URLSearchParams(window.location.search).get("admin") === "true";
+  const [showDisclaimer, setShowDisclaimer] = useState(() =>
+    isAdmin ? true : !localStorage.getItem("ulc_disclaimer_agreed"),
   );
   const [page, setPage] = useState<"home" | "associates">("home");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -837,11 +839,17 @@ export default function App() {
         {showDisclaimer && (
           <LegalDisclaimerModal
             onAgree={() => {
-              localStorage.setItem("ulc_disclaimer_agreed", "true");
+              if (!isAdmin) {
+                localStorage.setItem("ulc_disclaimer_agreed", "true");
+              }
               setShowDisclaimer(false);
             }}
             onDisagree={() => {
-              window.location.reload();
+              if (isAdmin) {
+                setShowDisclaimer(false);
+              } else {
+                window.location.reload();
+              }
             }}
           />
         )}
