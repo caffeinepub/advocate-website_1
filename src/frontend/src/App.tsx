@@ -796,8 +796,17 @@ export default function App() {
       setMenuOpen(false);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      setPage("home");
-      scrollTo(href);
+      setMenuOpen(false);
+      if (page !== "home") {
+        setPage("home");
+        setTimeout(() => {
+          const el = document.querySelector(href);
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }, 80);
+      } else {
+        const el = document.querySelector(href);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -859,7 +868,7 @@ export default function App() {
 
       {/* ─────────── FLOATING WHATSAPP BUTTON ─────────── */}
       <a
-        href="https://wa.me/919654083085?text=Hello%2C%20I%20am%20looking%20for%20legal%20assistance.%20Kindly%20guide%20me."
+        href="https://wa.me/919654083085?text=Hello%2C%20Sachin%20Upadhyay%20I%20visited%20your%20website%20and%20I%20am%20looking%20for%20legal%20assistance%20regarding%20a%20matter.%20Could%20you%20please%20let%20me%20know%20your%20availability%20for%20a%20consultation%3F"
         target="_blank"
         rel="noopener noreferrer"
         title="Chat on WhatsApp"
@@ -976,13 +985,10 @@ export default function App() {
             aria-label="UPADHYAY LAW CHAMBERS – Home"
           >
             <img
-              src="/assets/uploads/WhatsApp-Image-2026-03-09-at-3.45.12-PM-1.jpeg"
+              src="/assets/uploads/logo-1.jpeg"
               alt="UPADHYAY LAW CHAMBERS"
-              className="h-11 w-auto object-contain"
+              className="h-11 sm:h-14 w-auto object-contain rounded"
             />
-            <span className="font-display text-lg font-bold text-gold tracking-wider hidden sm:block">
-              UPADHYAY LAW CHAMBERS
-            </span>
           </button>
 
           {/* Desktop nav */}
@@ -1067,6 +1073,10 @@ export default function App() {
                       <a
                         href={link.href}
                         data-ocid={NAV_OCIDS[i]}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          handleNavClick(link.href);
+                        }}
                         onClick={(e) => {
                           e.preventDefault();
                           handleNavClick(link.href);
@@ -1090,6 +1100,7 @@ export default function App() {
                 })}
                 <li className="px-5 py-4">
                   <Button
+                    type="button"
                     data-ocid="nav.consultation.button"
                     onClick={() => scrollTo("#contact")}
                     className="w-full bg-gold hover:bg-gold-dark text-crimson-deep font-bold text-base py-3 shadow-gold tracking-wide"
@@ -1128,17 +1139,6 @@ export default function App() {
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-60" />
 
               <div className="relative z-10 container mx-auto px-4 text-center pt-32 sm:pt-40 pb-20 sm:pb-28">
-                <motion.div
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                  <div className="inline-flex items-center gap-2 bg-gold/15 border border-gold/30 text-gold text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-full mb-8">
-                    <Scale className="h-3.5 w-3.5" />
-                    <span>Enrolled Bar Council of Delhi</span>
-                  </div>
-                </motion.div>
-
                 <motion.h1
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -1173,44 +1173,6 @@ export default function App() {
                   transition={{ duration: 0.8, delay: 0.45, ease: "easeOut" }}
                   className="flex flex-col sm:flex-row items-center justify-center gap-4"
                 >
-                  <Button
-                    data-ocid="hero.consultation.primary_button"
-                    onClick={() => scrollTo("#contact")}
-                    size="lg"
-                    className="bg-gold hover:bg-gold-dark text-crimson-deep font-bold text-base px-8 py-6 shadow-gold hover:shadow-none transition-all duration-200 rounded-sm"
-                  >
-                    Book Consultation
-                  </Button>
-
-                  {/* ── Highlighted Contact Us button ── */}
-                  <motion.div
-                    animate={{
-                      boxShadow: [
-                        "0 0 0px 0px rgba(212,175,55,0)",
-                        "0 0 18px 6px rgba(212,175,55,0.55)",
-                        "0 0 0px 0px rgba(212,175,55,0)",
-                      ],
-                    }}
-                    transition={{
-                      duration: 2.4,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut",
-                    }}
-                    className="rounded-sm"
-                  >
-                    <Button
-                      data-ocid="hero.contact_button"
-                      onClick={() => scrollTo("#contact")}
-                      size="lg"
-                      className="relative overflow-hidden bg-gradient-to-r from-gold via-amber-400 to-gold text-crimson-deep font-bold text-base px-8 py-6 rounded-sm border-2 border-gold transition-all duration-200 hover:brightness-110 hover:scale-105"
-                    >
-                      <span className="flex items-center gap-2">
-                        <Phone className="h-4 w-4" />
-                        Contact Us
-                      </span>
-                    </Button>
-                  </motion.div>
-
                   <Button
                     data-ocid="hero.learn_more.secondary_button"
                     onClick={() => scrollTo("#about")}
@@ -1785,7 +1747,7 @@ export default function App() {
                           </div>
                           <div className="text-foreground text-sm leading-relaxed">
                             <a
-                              href="https://wa.me/919654083085?text=Hello%2C%20I%20am%20looking%20for%20legal%20assistance.%20Kindly%20guide%20me."
+                              href="https://wa.me/919654083085?text=Hello%2C%20Sachin%20Upadhyay%20I%20visited%20your%20website%20and%20I%20am%20looking%20for%20legal%20assistance%20regarding%20a%20matter.%20Could%20you%20please%20let%20me%20know%20your%20availability%20for%20a%20consultation%3F"
                               target="_blank"
                               rel="noopener noreferrer"
                               data-ocid="contact.whatsapp.button"
@@ -2077,9 +2039,9 @@ export default function App() {
                 <div className="lg:col-span-1">
                   <div className="flex items-center gap-3 mb-4">
                     <img
-                      src="/assets/uploads/WhatsApp-Image-2026-03-09-at-3.45.12-PM-1.jpeg"
+                      src="/assets/uploads/logo-1.jpeg"
                       alt="UPADHYAY LAW CHAMBERS"
-                      className="h-12 w-auto object-contain rounded"
+                      className="h-16 w-auto object-contain rounded"
                     />
                   </div>
                   <p className="text-cream/55 text-sm leading-relaxed">
@@ -2146,8 +2108,7 @@ export default function App() {
                     <li className="flex items-start gap-2">
                       <MapPin className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" />
                       <span className="text-cream/55 text-sm">
-                        Chamber No. 44, Western Wing, Tis Hazari District
-                        Courts, Delhi
+                        Chamber No. 44, Western Wing, Tis Hazari Courts, Delhi
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
