@@ -286,16 +286,6 @@ const STATS = [
   { value: "98%", label: "Success Rate" },
 ];
 
-/* ── District Courts ── */
-const DISTRICT_COURTS = [
-  "Tis Hazari Courts (Delhi)",
-  "Saket Courts (Delhi)",
-  "Karkardooma Courts (Delhi)",
-  "Rohini Courts (Delhi)",
-  "Dwarka Courts (Delhi)",
-  "All District Courts across all 28 States & 8 Union Territories",
-];
-
 /* ── Contact form ── */
 type FormState = {
   name: string;
@@ -985,9 +975,9 @@ export default function App() {
             aria-label="UPADHYAY LAW CHAMBERS – Home"
           >
             <img
-              src="/assets/uploads/logo-1.jpeg"
+              src="/assets/generated/logo-transparent.dim_400x400.png"
               alt="UPADHYAY LAW CHAMBERS"
-              className="h-11 sm:h-14 w-auto object-contain rounded"
+              className="h-14 sm:h-20 w-auto object-contain max-w-[200px] sm:max-w-[240px]"
             />
           </button>
 
@@ -1545,53 +1535,6 @@ export default function App() {
                     </div>
                   </div>
                 </FadeIn>
-
-                {/* District Courts */}
-                <FadeIn delay={0.2}>
-                  <div>
-                    <div className="flex items-center gap-3 mb-6">
-                      <Building className="h-5 w-5 text-gold" />
-                      <h3 className="font-display text-xl font-bold text-cream tracking-wide">
-                        District Courts Across India
-                      </h3>
-                      <div className="flex-1 h-px bg-white/10" />
-                    </div>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {DISTRICT_COURTS.map((court, i) => (
-                        <div
-                          key={court}
-                          data-ocid={`courts.district.item.${i + 1}`}
-                          className={`flex items-center gap-3 rounded-sm px-4 py-3 border transition-colors duration-200 group ${
-                            i === DISTRICT_COURTS.length - 1
-                              ? "bg-gold/10 border-gold/30 sm:col-span-2 lg:col-span-3"
-                              : "bg-crimson-mid/50 border-white/10 hover:border-gold/30"
-                          }`}
-                        >
-                          <div
-                            className={`w-8 h-8 rounded-sm flex items-center justify-center flex-shrink-0 ${
-                              i === DISTRICT_COURTS.length - 1
-                                ? "bg-gold/20"
-                                : "bg-gold/10"
-                            }`}
-                          >
-                            <Building2
-                              className={`h-4 w-4 ${i === DISTRICT_COURTS.length - 1 ? "text-gold" : "text-gold/70"}`}
-                            />
-                          </div>
-                          <span
-                            className={`text-sm leading-tight ${
-                              i === DISTRICT_COURTS.length - 1
-                                ? "text-gold font-semibold"
-                                : "text-cream/80 group-hover:text-cream"
-                            } transition-colors duration-200`}
-                          >
-                            {court}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </FadeIn>
               </div>
             </section>
 
@@ -2039,9 +1982,9 @@ export default function App() {
                 <div className="lg:col-span-1">
                   <div className="flex items-center gap-3 mb-4">
                     <img
-                      src="/assets/uploads/logo-1.jpeg"
+                      src="/assets/generated/logo-transparent.dim_400x400.png"
                       alt="UPADHYAY LAW CHAMBERS"
-                      className="h-16 w-auto object-contain rounded"
+                      className="h-20 w-auto object-contain max-w-[200px]"
                     />
                   </div>
                   <p className="text-cream/55 text-sm leading-relaxed">
