@@ -74,6 +74,66 @@ function FadeIn({
   );
 }
 
+/* ── Stagger variants for grid reveals ── */
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+const staggerItem = {
+  hidden: { opacity: 0, y: 28 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: "easeOut" as const },
+  },
+};
+
+/* ── Animated counter ── */
+function AnimatedCounter({
+  value,
+  label,
+}: {
+  value: string;
+  label: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [count, setCount] = useState(0);
+
+  const match = value.match(/^(\d+)(.*)$/);
+  const target = match ? Number.parseInt(match[1], 10) : 0;
+  const suffix = match ? match[2] : "";
+
+  useEffect(() => {
+    if (!isInView) return;
+    let current = 0;
+    const duration = 1600;
+    const steps = 60;
+    const increment = Math.ceil(target / steps);
+    const interval = Math.floor(duration / steps);
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(current);
+      }
+    }, interval);
+    return () => clearInterval(timer);
+  }, [isInView, target]);
+
+  return (
+    <div ref={ref} className="text-center bg-secondary rounded-sm py-4 px-3">
+      <div className="font-display text-2xl font-bold text-gold">
+        {isInView ? count : 0}
+        {suffix}
+      </div>
+      <div className="text-xs text-muted-foreground mt-1">{label}</div>
+    </div>
+  );
+}
+
 /* ── Star rating ── */
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -1130,12 +1190,37 @@ export default function App() {
 
               <div className="relative z-10 container mx-auto px-4 text-center pt-32 sm:pt-40 pb-20 sm:pb-28">
                 <motion.h1
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    hidden: {},
+                    visible: {
+                      transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+                    },
+                  }}
                   className="font-display text-3xl sm:text-5xl md:text-7xl font-bold text-cream leading-[1.1] mb-4"
                 >
-                  UPADHYAY LAW CHAMBERS
+                  {["UPADHYAY", "LAW", "CHAMBERS"].map((word) => (
+                    <motion.span
+                      key={word}
+                      variants={{
+                        hidden: { opacity: 0, y: 48, rotateX: -15 },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          rotateX: 0,
+                          transition: {
+                            duration: 0.7,
+                            ease: [0.22, 1, 0.36, 1],
+                          },
+                        },
+                      }}
+                      className="inline-block mr-[0.25em] last:mr-0"
+                      style={{ display: "inline-block" }}
+                    >
+                      {word}
+                    </motion.span>
+                  ))}
                 </motion.h1>
 
                 <motion.p
@@ -1330,17 +1415,11 @@ export default function App() {
                       {/* Stats */}
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         {STATS.map((stat) => (
-                          <div
+                          <AnimatedCounter
                             key={stat.label}
-                            className="text-center bg-secondary rounded-sm py-4 px-3"
-                          >
-                            <div className="font-display text-2xl font-bold text-gold">
-                              {stat.value}
-                            </div>
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {stat.label}
-                            </div>
-                          </div>
+                            value={stat.value}
+                            label={stat.label}
+                          />
                         ))}
                       </div>
                     </div>
@@ -1365,12 +1444,18 @@ export default function App() {
                   </p>
                 </FadeIn>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <motion.div
+                  className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                  variants={staggerContainer}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-80px" }}
+                >
                   {PRACTICE_AREAS.map((area, i) => (
-                    <FadeIn key={area.title} delay={i * 0.08}>
+                    <motion.div key={area.title} variants={staggerItem}>
                       <div
                         data-ocid={`practice.item.${i + 1}`}
-                        className="group bg-crimson-mid/60 border border-white/10 hover:border-gold/40 rounded-sm p-4 sm:p-6 transition-all duration-300 hover:-translate-y-1"
+                        className="group bg-crimson-mid/60 border border-white/10 hover:border-gold/60 rounded-sm p-4 sm:p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(201,168,76,0.22)]"
                       >
                         <div className="w-12 h-12 rounded-sm bg-gold/15 border border-gold/25 flex items-center justify-center mb-5 group-hover:bg-gold/25 transition-colors duration-300">
                           <area.icon className="h-6 w-6 text-gold" />
@@ -1382,9 +1467,9 @@ export default function App() {
                           {area.description}
                         </p>
                       </div>
-                    </FadeIn>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </div>
             </section>
 
@@ -1404,10 +1489,16 @@ export default function App() {
                   </p>
                 </FadeIn>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {SERVICES.map((service, i) => (
-                    <FadeIn key={service.title} delay={i * 0.08}>
-                      <div className="group relative bg-card border border-border hover:border-gold/50 rounded-sm p-4 sm:p-6 shadow-card hover:shadow-card-hover transition-all duration-300">
+                <motion.div
+                  className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                  variants={staggerContainer}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-80px" }}
+                >
+                  {SERVICES.map((service) => (
+                    <motion.div key={service.title} variants={staggerItem}>
+                      <div className="group relative bg-card border border-border hover:border-gold/50 rounded-sm p-4 sm:p-6 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(201,168,76,0.18)]">
                         <div className="absolute top-0 left-0 w-1 h-0 bg-gold rounded-tl-sm group-hover:h-full transition-all duration-300" />
                         <service.icon className="h-7 w-7 text-gold mb-4" />
                         <h3 className="font-display text-lg font-bold text-foreground mb-2">
@@ -1417,9 +1508,9 @@ export default function App() {
                           {service.description}
                         </p>
                       </div>
-                    </FadeIn>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </div>
             </section>
 
@@ -1435,9 +1526,15 @@ export default function App() {
                   </h2>
                 </FadeIn>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {WHY_US.map((item, i) => (
-                    <FadeIn key={item.title} delay={i * 0.1}>
+                <motion.div
+                  className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                  variants={staggerContainer}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-80px" }}
+                >
+                  {WHY_US.map((item) => (
+                    <motion.div key={item.title} variants={staggerItem}>
                       <div className="text-center p-4 sm:p-6">
                         <div className="w-14 h-14 rounded-full bg-crimson-deep mx-auto flex items-center justify-center mb-4 shadow-crimson">
                           <item.icon className="h-7 w-7 text-gold" />
@@ -1449,9 +1546,9 @@ export default function App() {
                           {item.description}
                         </p>
                       </div>
-                    </FadeIn>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </div>
             </section>
 
@@ -1562,7 +1659,13 @@ export default function App() {
                     <Loader2 className="h-8 w-8 text-gold animate-spin" />
                   </div>
                 ) : (
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <motion.div
+                    className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                    variants={staggerContainer}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                  >
                     {displayTestimonials.map((t, i) => {
                       const caseType = (
                         t as (typeof SAMPLE_TESTIMONIALS)[number] & {
@@ -1570,7 +1673,7 @@ export default function App() {
                         }
                       ).caseType;
                       return (
-                        <FadeIn key={t.clientName} delay={i * 0.08}>
+                        <motion.div key={t.clientName} variants={staggerItem}>
                           <div
                             data-ocid={`testimonials.item.${i + 1}`}
                             className="bg-card border border-border hover:border-gold/30 rounded-sm p-5 sm:p-7 relative shadow-card transition-all duration-300 h-full flex flex-col"
@@ -1603,10 +1706,10 @@ export default function App() {
                               </div>
                             </div>
                           </div>
-                        </FadeIn>
+                        </motion.div>
                       );
                     })}
-                  </div>
+                  </motion.div>
                 )}
               </div>
             </section>
@@ -1640,8 +1743,8 @@ export default function App() {
                             Office Address
                           </div>
                           <div className="text-foreground text-sm leading-relaxed whitespace-pre-line">
-                            Chamber No. 44, Western Wing{"\n"}Tis Hazari
-                            District Courts, Delhi 110054
+                            Chamber No. 44, Western Wing{"\n"}Tis Hazari Courts,
+                            Delhi 110054
                           </div>
                         </div>
                       </div>
@@ -1730,12 +1833,12 @@ export default function App() {
                           </div>
                           <div className="text-foreground text-sm leading-relaxed">
                             <a
-                              href="https://www.instagram.com/advocatesachinupadhyay"
+                              href="https://www.instagram.com/its_adv_sachin"
                               target="_blank"
                               rel="noopener noreferrer"
                               className="hover:text-gold transition-colors"
                             >
-                              @advocatesachinupadhyay
+                              @its_adv_sachin
                             </a>
                           </div>
                         </div>
@@ -1973,8 +2076,6 @@ export default function App() {
               </div>
             </section>
           </main>
-
-          {/* ─────────── FOOTER ─────────── */}
           <footer className="bg-crimson-deep border-t border-white/10">
             <div className="container mx-auto px-4 py-10 md:py-14">
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 mb-12">

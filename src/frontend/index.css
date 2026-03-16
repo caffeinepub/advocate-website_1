@@ -227,3 +227,41 @@
     box-shadow: 0 8px 30px rgba(10, 14, 50, 0.5);
   }
 }
+
+/* ── Animation keyframes ── */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes gold-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0); }
+  50% { box-shadow: 0 0 16px 4px rgba(201, 168, 76, 0.18); }
+}
+
+/* ── Card hover glow utility ── */
+.card-glow-hover {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card-glow-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(201, 168, 76, 0.22), 0 0 0 1px rgba(201, 168, 76, 0.3);
+}
+
+/* ── Hero word animation perspective ── */
+.hero-words-perspective {
+  perspective: 800px;
+  transform-style: preserve-3d;
+}
