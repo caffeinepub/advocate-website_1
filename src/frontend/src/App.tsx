@@ -17,7 +17,6 @@ import {
   Building2,
   CheckCircle2,
   ChevronDown,
-  Clock,
   FileText,
   Gavel,
   HeartHandshake,
@@ -1037,17 +1036,6 @@ export default function App() {
                       </div>
                     </div>
                   </a>
-                  <div className="flex items-center gap-2.5 bg-crimson-deep/90 backdrop-blur-sm px-5 py-3 w-full sm:w-auto">
-                    <Clock className="h-4 w-4 text-gold flex-shrink-0" />
-                    <div className="text-left">
-                      <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
-                        Hours
-                      </div>
-                      <div className="text-cream text-xs">
-                        Mon–Sat: 9:30 AM – 6:00 PM
-                      </div>
-                    </div>
-                  </div>
                 </motion.div>
               </div>
 
@@ -1439,6 +1427,35 @@ export default function App() {
                         </button>
                       </li>
                     ))}
+                  </ul>
+                </div>
+
+                {/* Contact */}
+                <div>
+                  <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">
+                    Contact
+                  </h4>
+                  <ul className="space-y-3">
+                    <li>
+                      <a
+                        href="mailto:sachinupadhayay146@gmail.com"
+                        className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 flex items-center gap-2"
+                      >
+                        <span className="text-gold">✉</span>
+                        sachinupadhayay146@gmail.com
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://instagram.com/its_adv_sachin"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 flex items-center gap-2"
+                      >
+                        <span className="text-gold">📷</span>
+                        @its_adv_sachin
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </div>
