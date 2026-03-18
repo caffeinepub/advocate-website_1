@@ -28,10 +28,8 @@ import {
   MapPin,
   Menu,
   Phone,
-  Quote,
   Scale,
   Shield,
-  Star,
   TrendingUp,
   Users,
   X,
@@ -41,10 +39,6 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Toaster, toast } from "sonner";
 import AssociatesPage from "./AssociatesPage";
 import { LegalMatterType } from "./backend.d";
-import {
-  useGetAllTestimonials,
-  useSubmitContactForm,
-} from "./hooks/useQueries";
 
 /* ── Fade-in section wrapper ── */
 function FadeIn({
@@ -134,83 +128,14 @@ function AnimatedCounter({
   );
 }
 
-/* ── Star rating ── */
-function StarRating({ rating }: { rating: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <Star
-          key={s}
-          className={`h-4 w-4 ${s <= rating ? "fill-gold text-gold" : "fill-muted text-muted-foreground"}`}
-        />
-      ))}
-    </div>
-  );
-}
-
-/* ── Sample testimonials (fallback) ── */
-const SAMPLE_TESTIMONIALS = [
-  {
-    clientName: "Md. Mahfooj",
-    starRating: 5,
-    caseType: "Criminal",
-    reviewText:
-      "Adv. Sachin Upadhyay provided outstanding criminal defense. His sharp legal strategy and thorough preparation made all the difference. I am deeply grateful for his dedication and expertise.",
-  },
-  {
-    clientName: "Ateek Ahmad",
-    starRating: 5,
-    caseType: "Criminal",
-    reviewText:
-      "Excellent legal counsel in my criminal matter. Adv. Upadhyay was prompt, professional, and fought tirelessly for my rights at Tis Hazari Courts. Highly recommended.",
-  },
-  {
-    clientName: "Tarjeet Singh",
-    starRating: 5,
-    caseType: "Criminal",
-    reviewText:
-      "Adv. Sachin Upadhyay handled my case with great skill and confidence. His knowledge of criminal law is exceptional and he kept me informed at every stage. Very satisfied.",
-  },
-  {
-    clientName: "Pankaj Kumar",
-    starRating: 5,
-    caseType: "Criminal",
-    reviewText:
-      "I could not have asked for a better advocate. Adv. Upadhyay's courtroom presence and legal acumen are truly impressive. He secured the best possible outcome for my case.",
-  },
-  {
-    clientName: "Jyoti",
-    starRating: 5,
-    caseType: "Family Matter",
-    reviewText:
-      "During a very sensitive family matter, Adv. Upadhyay showed both legal brilliance and genuine compassion. He guided us through the entire process with patience and care.",
-  },
-  {
-    clientName: "Manohar Singh",
-    starRating: 5,
-    caseType: "Family Matter",
-    reviewText:
-      "Adv. Sachin Upadhyay handled our family dispute with utmost professionalism and sensitivity. His advice was practical and he achieved the best resolution for our family.",
-  },
-  {
-    clientName: "Anand Kumar",
-    starRating: 5,
-    caseType: "Civil",
-    reviewText:
-      "Outstanding legal support in my civil matter. Adv. Upadhyay's strategic approach and meticulous case preparation delivered excellent results. A truly reliable and knowledgeable advocate.",
-  },
-];
-
 /* ── Nav links ── */
 const NAV_LINKS = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#practice", label: "Practice Areas" },
-  { href: "#courts", label: "Courts" },
-  { href: "#services", label: "Services" },
-  { href: "#testimonials", label: "Testimonials" },
-  { href: "#associates", label: "Associates" },
-  { href: "#contact", label: "Contact" },
+  { href: "#home", label: "Home", shortLabel: "Home" },
+  { href: "#about", label: "About", shortLabel: "About" },
+  { href: "#practice", label: "Practice Areas", shortLabel: "Practice" },
+  { href: "#courts", label: "Courts", shortLabel: "Courts" },
+  { href: "#services", label: "Services", shortLabel: "Services" },
+  { href: "#associates", label: "Associates", shortLabel: "Team" },
 ];
 
 const NAV_OCIDS = [
@@ -219,9 +144,7 @@ const NAV_OCIDS = [
   "nav.practice.link",
   "nav.courts.link",
   "nav.services.link",
-  "nav.testimonials.link",
   "nav.associates.link",
-  "nav.contact.link",
 ];
 
 /* ── Practice areas ── */
@@ -345,24 +268,6 @@ const STATS = [
   { value: "1000+", label: "Happy Clients" },
   { value: "98%", label: "Success Rate" },
 ];
-
-/* ── Contact form ── */
-type FormState = {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-  matterType: LegalMatterType | "";
-};
-
-const MATTER_TYPE_LABELS: Record<LegalMatterType, string> = {
-  [LegalMatterType.criminal]: "Criminal Law",
-  [LegalMatterType.civil]: "Civil Law",
-  [LegalMatterType.family]: "Family Law",
-  [LegalMatterType.corporate]: "Corporate Law",
-  [LegalMatterType.property]: "Property Law",
-  [LegalMatterType.other]: "Other",
-};
 
 /* ══════════════════════════════════════════════
    LEGAL DISCLAIMER MODAL
@@ -809,24 +714,8 @@ export default function App() {
     isAdmin ? true : !localStorage.getItem("ulc_disclaimer_agreed"),
   );
   const [page, setPage] = useState<"home" | "associates">("home");
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [_menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [form, setForm] = useState<FormState>({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-    matterType: "",
-  });
-
-  const { data: testimonials, isLoading: testimonialsLoading } =
-    useGetAllTestimonials();
-  const submitMutation = useSubmitContactForm();
-
-  const displayTestimonials =
-    testimonials && testimonials.length > 0
-      ? testimonials.slice(0, 7)
-      : SAMPLE_TESTIMONIALS;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -860,35 +749,6 @@ export default function App() {
     }
   };
 
-  const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!form.matterType) {
-      toast.error("Please select a legal matter type.");
-      return;
-    }
-    try {
-      await submitMutation.mutateAsync({
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        message: form.message,
-        matterType: form.matterType as LegalMatterType,
-      });
-      toast.success(
-        "Your consultation request has been submitted! We will contact you shortly.",
-      );
-      setForm({ name: "", email: "", phone: "", message: "", matterType: "" });
-    } catch {
-      toast.error("Failed to submit. Please try again or call us directly.");
-    }
-  };
-
   const currentYear = new Date().getFullYear();
 
   return (
@@ -918,7 +778,7 @@ export default function App() {
 
       {/* ─────────── FLOATING WHATSAPP BUTTON ─────────── */}
       <a
-        href="https://wa.me/919654083085?text=Hello%2C%20Sachin%20Upadhyay%20I%20visited%20your%20website%20and%20I%20am%20looking%20for%20legal%20assistance%20regarding%20a%20matter.%20Could%20you%20please%20let%20me%20know%20your%20availability%20for%20a%20consultation%3F"
+        href="https://wa.me/919654083085?text=Hello%2C%20Advocate%20Sachin%20Upadhyay%20I%20visited%20your%20website%20and%20I%20am%20looking%20for%20legal%20assistance%20regarding%20a%20matter.%20Could%20you%20please%20let%20me%20know%20your%20availability%20for%20a%20consultation%3F"
         target="_blank"
         rel="noopener noreferrer"
         title="Chat on WhatsApp"
@@ -964,56 +824,9 @@ export default function App() {
         </span>
       </a>
 
-      {/* ─────────── TOP INFO BAR ─────────── */}
-      <div
-        data-ocid="infobar.section"
-        className="fixed top-0 left-0 right-0 z-[60] bg-crimson-deep border-b border-gold/20"
-        style={{ height: "40px" }}
-      >
-        <div className="container mx-auto px-4 h-full flex items-center justify-between">
-          {/* Address + Phone (always visible) */}
-          <div className="flex items-center gap-4 sm:gap-6 overflow-hidden">
-            <a
-              href="https://maps.google.com/?q=Tis+Hazari+Courts+Delhi"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-ocid="infobar.address.link"
-              className="flex items-center gap-1.5 text-cream/85 hover:text-gold transition-colors duration-200 min-w-0"
-            >
-              <MapPin className="h-3 w-3 text-gold flex-shrink-0" />
-              <span className="text-[11px] tracking-wide truncate hidden sm:block">
-                Chamber No. 44, Western Wing, Tis Hazari Courts, Delhi 110054
-              </span>
-              <span className="text-[11px] tracking-wide truncate sm:hidden">
-                Tis Hazari Courts, Delhi
-              </span>
-            </a>
-            <div className="w-px h-3.5 bg-gold/20 flex-shrink-0 hidden sm:block" />
-            <a
-              href="tel:+919654083085"
-              data-ocid="infobar.phone.link"
-              className="flex items-center gap-1.5 text-cream/85 hover:text-gold transition-colors duration-200 flex-shrink-0"
-            >
-              <Phone className="h-3 w-3 text-gold flex-shrink-0" />
-              <span className="text-[11px] tracking-wide">
-                +91 96540 83085 / 87505 05255
-              </span>
-            </a>
-          </div>
-
-          {/* Hours (right side, hidden on very small screens) */}
-          <div className="hidden md:flex items-center gap-1.5 text-cream/65 flex-shrink-0">
-            <Clock className="h-3 w-3 text-gold" />
-            <span className="text-[11px] tracking-wide">
-              Mon–Sat: 9:30 AM – 6:00 PM
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* ─────────── NAVBAR ─────────── */}
       <header
-        className={`fixed top-[40px] left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
             ? "bg-crimson-deep/97 backdrop-blur-md shadow-lg shadow-black/30"
             : "bg-crimson-deep/80 backdrop-blur-sm"
@@ -1041,127 +854,43 @@ export default function App() {
             />
           </button>
 
-          {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-0">
-            {NAV_LINKS.map((link, i) => {
-              const isActive =
-                link.href === "#associates" && page === "associates";
-              return (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    data-ocid={NAV_OCIDS[i]}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavClick(link.href);
-                    }}
-                    className={`relative px-4 py-5 text-sm font-display font-medium tracking-wide transition-colors duration-200 block group ${
-                      isActive ? "text-gold" : "text-cream/80 hover:text-gold"
-                    }`}
-                  >
-                    {link.label}
-                    {/* Gold underline indicator */}
-                    <span
-                      className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gold transition-transform duration-200 origin-center ${
-                        isActive
-                          ? "scale-x-100"
-                          : "scale-x-0 group-hover:scale-x-100"
+          {/* Nav links – always visible, scrollable on mobile */}
+          <div className="flex-1 min-w-0 overflow-x-auto scrollbar-hide">
+            <ul className="flex items-center gap-0 whitespace-nowrap min-w-0">
+              {NAV_LINKS.map((link, i) => {
+                const isActive =
+                  link.href === "#associates" && page === "associates";
+                return (
+                  <li key={link.href} className="shrink-0">
+                    <a
+                      href={link.href}
+                      data-ocid={NAV_OCIDS[i]}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleNavClick(link.href);
+                      }}
+                      className={`relative px-2 py-3 text-[11px] md:px-4 md:py-5 md:text-sm font-display font-medium tracking-wide transition-colors duration-200 block group ${
+                        isActive ? "text-gold" : "text-cream/80 hover:text-gold"
                       }`}
-                    />
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <Button
-              data-ocid="nav.consultation.button"
-              onClick={() => scrollTo("#contact")}
-              className="hidden sm:flex bg-gold hover:bg-gold-dark text-crimson-deep font-bold text-sm px-5 py-2.5 shadow-gold transition-all duration-200 tracking-wide"
-            >
-              Book Consultation
-            </Button>
-
-            {/* Mobile menu toggle */}
-            <button
-              type="button"
-              className="lg:hidden flex items-center justify-center text-gold border border-gold/40 hover:border-gold hover:bg-gold/10 rounded p-2 transition-all duration-200 min-w-[44px] min-h-[44px]"
-              onClick={() => setMenuOpen((o) => !o)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-              style={{ touchAction: "manipulation" }}
-            >
-              {menuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </button>
+                      style={{ touchAction: "manipulation" }}
+                    >
+                      <span className="md:hidden">{link.shortLabel}</span>
+                      <span className="hidden md:inline">{link.label}</span>
+                      {/* Gold underline indicator */}
+                      <span
+                        className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gold transition-transform duration-200 origin-center ${
+                          isActive
+                            ? "scale-x-100"
+                            : "scale-x-0 group-hover:scale-x-100"
+                        }`}
+                      />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </nav>
-
-        {/* Mobile menu */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.22, ease: "easeInOut" }}
-              className="lg:hidden bg-crimson-deep/98 backdrop-blur-md border-t border-gold/20 overflow-hidden"
-            >
-              <ul className="container mx-auto px-2 py-2 flex flex-col">
-                {NAV_LINKS.map((link, i) => {
-                  const isActive =
-                    link.href === "#associates" && page === "associates";
-                  return (
-                    <li
-                      key={link.href}
-                      className="border-b border-white/10 last:border-b-0"
-                    >
-                      <a
-                        href={link.href}
-                        data-ocid={NAV_OCIDS[i]}
-                        onTouchEnd={(e) => {
-                          e.preventDefault();
-                          handleNavClick(link.href);
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleNavClick(link.href);
-                        }}
-                        style={{ touchAction: "manipulation" }}
-                        className={`flex items-center gap-3 px-5 py-4 transition-colors duration-150 font-display text-base font-medium ${
-                          isActive
-                            ? "text-gold font-semibold"
-                            : "text-cream/80 hover:text-gold hover:bg-gold/5"
-                        }`}
-                      >
-                        <span
-                          className={`text-xs transition-colors duration-150 ${isActive ? "text-gold" : "text-gold/50"}`}
-                        >
-                          ▸
-                        </span>
-                        {link.label}
-                      </a>
-                    </li>
-                  );
-                })}
-                <li className="px-5 py-4">
-                  <Button
-                    type="button"
-                    data-ocid="nav.consultation.button"
-                    onClick={() => scrollTo("#contact")}
-                    className="w-full bg-gold hover:bg-gold-dark text-crimson-deep font-bold text-base py-3 shadow-gold tracking-wide"
-                  >
-                    Book Consultation
-                  </Button>
-                </li>
-              </ul>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
 
       {page === "associates" ? (
@@ -1175,16 +904,44 @@ export default function App() {
               className="relative min-h-screen flex items-center justify-center overflow-hidden"
             >
               {/* Background image */}
-              <div
+              {/* Lady of Justice background with zoom-in animation */}
+              <motion.div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                 style={{
                   backgroundImage:
-                    "url('/assets/generated/hero-bg.dim_1440x900.jpg')",
+                    "url('/assets/generated/lady-of-justice-hero.dim_1920x1080.jpg')",
+                }}
+                initial={{ scale: 1.12, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 2.2, ease: "easeOut" }}
+              />
+              {/* Dark overlay - slightly lighter to reveal the image */}
+              <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.10_0.04_245/0.75)] via-[oklch(0.13_0.05_245/0.65)] to-[oklch(0.10_0.04_245/0.88)]" />
+              {/* Golden radial glow from center */}
+              <motion.div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 70% 60% at 50% 40%, oklch(0.75 0.18 85 / 0.12) 0%, transparent 70%)",
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 3, delay: 0.8 }}
+              />
+              {/* Subtle shimmer pulse on the gold glow */}
+              <motion.div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 50% 40% at 50% 35%, oklch(0.85 0.20 85 / 0.08) 0%, transparent 60%)",
+                }}
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{
+                  duration: 4,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
                 }}
               />
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.15_0.05_245/0.92)] via-[oklch(0.18_0.055_245/0.82)] to-[oklch(0.13_0.045_245/0.96)]" />
-
               {/* Gold line accent */}
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-60" />
 
@@ -1241,23 +998,6 @@ export default function App() {
                   10+ Years Practice &nbsp;|&nbsp; Supreme Court of India
                   &nbsp;|&nbsp; All High Courts &amp; District Courts
                 </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.45, ease: "easeOut" }}
-                  className="flex flex-col sm:flex-row items-center justify-center gap-4"
-                >
-                  <Button
-                    data-ocid="hero.learn_more.secondary_button"
-                    onClick={() => scrollTo("#about")}
-                    size="lg"
-                    variant="outline"
-                    className="hidden sm:inline-flex border-cream/40 text-cream hover:bg-cream/10 hover:border-cream text-base px-8 py-6 rounded-sm"
-                  >
-                    Learn More
-                  </Button>
-                </motion.div>
 
                 {/* ── Office quick-info strip ── */}
                 <motion.div
@@ -1634,447 +1374,6 @@ export default function App() {
                 </FadeIn>
               </div>
             </section>
-
-            {/* ─────────── TESTIMONIALS ─────────── */}
-            <section id="testimonials" className="py-14 md:py-24 bg-background">
-              <div className="container mx-auto px-4">
-                <FadeIn className="text-center mb-10 md:mb-16">
-                  <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
-                    Client Voices
-                  </div>
-                  <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
-                    Testimonials
-                  </h2>
-                  <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                    What our clients say about their experience working with
-                    UPADHYAY LAW CHAMBERS.
-                  </p>
-                </FadeIn>
-
-                {testimonialsLoading ? (
-                  <div
-                    data-ocid="testimonials.loading_state"
-                    className="flex justify-center py-16"
-                  >
-                    <Loader2 className="h-8 w-8 text-gold animate-spin" />
-                  </div>
-                ) : (
-                  <motion.div
-                    className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                    variants={staggerContainer}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
-                  >
-                    {displayTestimonials.map((t, i) => {
-                      const caseType = (
-                        t as (typeof SAMPLE_TESTIMONIALS)[number] & {
-                          caseType?: string;
-                        }
-                      ).caseType;
-                      return (
-                        <motion.div key={t.clientName} variants={staggerItem}>
-                          <div
-                            data-ocid={`testimonials.item.${i + 1}`}
-                            className="bg-card border border-border hover:border-gold/30 rounded-sm p-5 sm:p-7 relative shadow-card transition-all duration-300 h-full flex flex-col"
-                          >
-                            <Quote className="absolute top-5 right-5 h-8 w-8 text-gold/20" />
-                            <div className="flex items-center justify-between mb-3">
-                              <StarRating rating={Number(t.starRating)} />
-                              {caseType && (
-                                <span className="text-[10px] font-semibold tracking-wider uppercase bg-gold/15 text-gold border border-gold/30 px-2 py-0.5 rounded-full">
-                                  {caseType}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-muted-foreground text-sm leading-relaxed mt-2 mb-5 flex-1">
-                              "{t.reviewText}"
-                            </p>
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-crimson-deep/10 border border-gold/30 flex items-center justify-center">
-                                <span className="text-gold font-bold text-sm">
-                                  {t.clientName.charAt(0).toUpperCase()}
-                                </span>
-                              </div>
-                              <div>
-                                <div className="text-foreground font-semibold text-sm">
-                                  {t.clientName}
-                                </div>
-                                <div className="text-muted-foreground text-xs">
-                                  Verified Client
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
-                  </motion.div>
-                )}
-              </div>
-            </section>
-
-            {/* ─────────── CONTACT ─────────── */}
-            <section id="contact" className="py-14 md:py-24 bg-secondary/30">
-              <div className="container mx-auto px-4">
-                <FadeIn className="text-center mb-10 md:mb-16">
-                  <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
-                    Get In Touch
-                  </div>
-                  <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
-                    Book a Consultation
-                  </h2>
-                  <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                    Reach out to discuss your legal matter with UPADHYAY LAW
-                    CHAMBERS. The first consultation is free.
-                  </p>
-                </FadeIn>
-
-                <div className="grid lg:grid-cols-5 gap-10 max-w-5xl mx-auto">
-                  {/* Info column */}
-                  <FadeIn className="lg:col-span-2 order-last lg:order-none">
-                    <div className="space-y-6">
-                      <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-sm bg-crimson-deep flex items-center justify-center flex-shrink-0 shadow-crimson">
-                          <MapPin className="h-5 w-5 text-gold" />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gold font-semibold tracking-wider uppercase mb-1">
-                            Office Address
-                          </div>
-                          <div className="text-foreground text-sm leading-relaxed whitespace-pre-line">
-                            Chamber No. 44, Western Wing{"\n"}Tis Hazari Courts,
-                            Delhi 110054
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-sm bg-crimson-deep flex items-center justify-center flex-shrink-0 shadow-crimson">
-                          <Phone className="h-5 w-5 text-gold" />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gold font-semibold tracking-wider uppercase mb-1">
-                            Phone
-                          </div>
-                          <div className="text-foreground text-sm leading-relaxed">
-                            <a
-                              href="tel:+919654083085"
-                              className="hover:text-gold transition-colors"
-                            >
-                              +91 96540 83085
-                            </a>
-                            <br />
-                            <a
-                              href="tel:+918750505255"
-                              className="hover:text-gold transition-colors"
-                            >
-                              +91 87505 05255
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      {/* WhatsApp */}
-                      <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-sm bg-[#25D366] flex items-center justify-center flex-shrink-0 shadow-sm">
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            className="h-5 w-5 text-white"
-                            role="img"
-                            aria-label="WhatsApp"
-                          >
-                            <title>WhatsApp</title>
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <div className="text-xs text-gold font-semibold tracking-wider uppercase mb-1">
-                            WhatsApp
-                          </div>
-                          <div className="text-foreground text-sm leading-relaxed">
-                            <a
-                              href="https://wa.me/919654083085?text=Hello%2C%20Sachin%20Upadhyay%20I%20visited%20your%20website%20and%20I%20am%20looking%20for%20legal%20assistance%20regarding%20a%20matter.%20Could%20you%20please%20let%20me%20know%20your%20availability%20for%20a%20consultation%3F"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              data-ocid="contact.whatsapp.button"
-                              className="hover:text-[#25D366] transition-colors font-medium"
-                            >
-                              Chat on WhatsApp
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-sm bg-crimson-deep flex items-center justify-center flex-shrink-0 shadow-crimson">
-                          <Mail className="h-5 w-5 text-gold" />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gold font-semibold tracking-wider uppercase mb-1">
-                            Email
-                          </div>
-                          <div className="text-foreground text-sm leading-relaxed">
-                            <a
-                              href="mailto:sachinupadhayay146@gmail.com"
-                              className="hover:text-gold transition-colors break-all"
-                            >
-                              sachinupadhayay146@gmail.com
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-sm bg-crimson-deep flex items-center justify-center flex-shrink-0 shadow-crimson">
-                          <Users className="h-5 w-5 text-gold" />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gold font-semibold tracking-wider uppercase mb-1">
-                            Social / Instagram
-                          </div>
-                          <div className="text-foreground text-sm leading-relaxed">
-                            <a
-                              href="https://www.instagram.com/its_adv_sachin"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="hover:text-gold transition-colors"
-                            >
-                              @its_adv_sachin
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-sm bg-crimson-deep flex items-center justify-center flex-shrink-0 shadow-crimson">
-                          <Clock className="h-5 w-5 text-gold" />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gold font-semibold tracking-wider uppercase mb-1">
-                            Office Hours
-                          </div>
-                          <div className="text-foreground text-sm leading-relaxed whitespace-pre-line">
-                            Mon – Sat: 9:30 AM – 6:00 PM{"\n"}Sunday: By
-                            Appointment
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Tis Hazari Court Map */}
-                      <div className="mt-2">
-                        <div className="text-xs text-gold font-semibold tracking-wider uppercase mb-3">
-                          Location – Tis Hazari Courts
-                        </div>
-                        <div className="rounded-sm overflow-hidden border border-gold/20 shadow-sm">
-                          <iframe
-                            title="Tis Hazari Courts Location"
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.168822898716!2d77.21390261508257!3d28.669485982393686!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd0f8e87529d%3A0xd8cc3882cd9e9b69!2sTis%20Hazari%20Court!5e0!3m2!1sen!2sin!4v1680000000000!5m2!1sen!2sin"
-                            width="100%"
-                            height="200"
-                            style={{ border: 0 }}
-                            allowFullScreen
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                          />
-                        </div>
-                        <a
-                          href="https://maps.google.com/?q=Tis+Hazari+Courts+Delhi"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs text-gold hover:text-gold-dark transition-colors mt-2"
-                        >
-                          <MapPin className="h-3 w-3" />
-                          Open in Google Maps
-                        </a>
-                      </div>
-                    </div>
-                  </FadeIn>
-
-                  {/* Form column */}
-                  <FadeIn
-                    delay={0.12}
-                    className="lg:col-span-3 order-first lg:order-none"
-                  >
-                    <form
-                      onSubmit={handleSubmit}
-                      className="bg-card border border-border rounded-sm p-4 sm:p-7 shadow-card"
-                    >
-                      <h3 className="font-display text-xl font-bold text-foreground mb-6">
-                        Send Us a Message
-                      </h3>
-
-                      <div className="grid sm:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <Label
-                            htmlFor="name"
-                            className="text-xs font-semibold tracking-wider uppercase text-muted-foreground mb-1.5 block"
-                          >
-                            Full Name *
-                          </Label>
-                          <Input
-                            id="name"
-                            name="name"
-                            data-ocid="contact.name.input"
-                            value={form.name}
-                            onChange={handleFormChange}
-                            required
-                            placeholder="Your full name"
-                            className="rounded-sm"
-                          />
-                        </div>
-                        <div>
-                          <Label
-                            htmlFor="email"
-                            className="text-xs font-semibold tracking-wider uppercase text-muted-foreground mb-1.5 block"
-                          >
-                            Email *
-                          </Label>
-                          <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            data-ocid="contact.email.input"
-                            value={form.email}
-                            onChange={handleFormChange}
-                            required
-                            placeholder="your@email.com"
-                            className="rounded-sm"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid sm:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <Label
-                            htmlFor="phone"
-                            className="text-xs font-semibold tracking-wider uppercase text-muted-foreground mb-1.5 block"
-                          >
-                            Phone *
-                          </Label>
-                          <Input
-                            id="phone"
-                            name="phone"
-                            type="tel"
-                            data-ocid="contact.phone.input"
-                            value={form.phone}
-                            onChange={handleFormChange}
-                            required
-                            placeholder="+91 96540 83085"
-                            className="rounded-sm"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground mb-1.5 block">
-                            Legal Matter *
-                          </Label>
-                          <Select
-                            value={form.matterType}
-                            onValueChange={(val) =>
-                              setForm((prev) => ({
-                                ...prev,
-                                matterType: val as LegalMatterType,
-                              }))
-                            }
-                          >
-                            <SelectTrigger
-                              data-ocid="contact.matter.select"
-                              className="rounded-sm"
-                            >
-                              <SelectValue placeholder="Select matter type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {(
-                                Object.entries(MATTER_TYPE_LABELS) as [
-                                  LegalMatterType,
-                                  string,
-                                ][]
-                              ).map(([val, label]) => (
-                                <SelectItem key={val} value={val}>
-                                  {label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
-                      <div className="mb-6">
-                        <Label
-                          htmlFor="message"
-                          className="text-xs font-semibold tracking-wider uppercase text-muted-foreground mb-1.5 block"
-                        >
-                          Message *
-                        </Label>
-                        <Textarea
-                          id="message"
-                          name="message"
-                          data-ocid="contact.message.textarea"
-                          value={form.message}
-                          onChange={handleFormChange}
-                          required
-                          rows={4}
-                          placeholder="Briefly describe your legal matter..."
-                          className="rounded-sm resize-none"
-                        />
-                      </div>
-
-                      {/* States */}
-                      <AnimatePresence mode="wait">
-                        {submitMutation.isSuccess && (
-                          <motion.div
-                            key="success"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            data-ocid="contact.success_state"
-                            className="mb-4 flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-sm px-4 py-3"
-                          >
-                            <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
-                            <span>
-                              Your consultation request has been received! We'll
-                              contact you within 24 hours.
-                            </span>
-                          </motion.div>
-                        )}
-                        {submitMutation.isError && (
-                          <motion.div
-                            key="error"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            data-ocid="contact.error_state"
-                            className="mb-4 flex items-center gap-2 text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3"
-                          >
-                            <X className="h-4 w-4 flex-shrink-0" />
-                            <span>
-                              Submission failed. Please try again or call us at
-                              +91 96540 83085.
-                            </span>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
-                      <Button
-                        type="submit"
-                        data-ocid="contact.submit.submit_button"
-                        disabled={submitMutation.isPending}
-                        className="w-full bg-crimson-deep hover:bg-crimson-mid text-cream font-semibold py-5 rounded-sm shadow-crimson transition-all duration-200"
-                      >
-                        {submitMutation.isPending ? (
-                          <>
-                            <Loader2
-                              data-ocid="contact.loading_state"
-                              className="mr-2 h-4 w-4 animate-spin"
-                            />
-                            Submitting...
-                          </>
-                        ) : (
-                          "Send Message"
-                        )}
-                      </Button>
-                    </form>
-                  </FadeIn>
-                </div>
-              </div>
-            </section>
           </main>
           <footer className="bg-crimson-deep border-t border-white/10">
             <div className="container mx-auto px-4 py-10 md:py-14">
@@ -2140,40 +1439,6 @@ export default function App() {
                         </button>
                       </li>
                     ))}
-                  </ul>
-                </div>
-
-                {/* Contact */}
-                <div>
-                  <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">
-                    Contact
-                  </h4>
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <MapPin className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" />
-                      <span className="text-cream/55 text-sm">
-                        Chamber No. 44, Western Wing, Tis Hazari Courts, Delhi
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Phone className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" />
-                      <div className="text-cream/55 text-sm">
-                        <div>+91 96540 83085</div>
-                        <div>+91 87505 05255</div>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Mail className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" />
-                      <span className="text-cream/55 text-sm break-all">
-                        sachinupadhayay146@gmail.com
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Clock className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" />
-                      <span className="text-cream/55 text-sm">
-                        Mon–Sat: 9:30 AM – 6:00 PM
-                      </span>
-                    </li>
                   </ul>
                 </div>
               </div>
