@@ -21,6 +21,7 @@ import {
   Gavel,
   HeartHandshake,
   Home,
+  Instagram,
   Landmark,
   Loader2,
   Mail,
@@ -998,21 +999,21 @@ export default function App() {
                   &nbsp;|&nbsp; All High Courts &amp; District Courts
                 </motion.p>
 
-                {/* ── Office quick-info strip ── */}
+                {/* ── Office + Call Us unified card ── */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.65, ease: "easeOut" }}
                   data-ocid="hero.office.card"
-                  className="mt-12 flex flex-col sm:flex-row w-full sm:w-auto items-center justify-center gap-0 rounded-sm overflow-hidden border border-gold/25 shadow-gold/10 shadow-lg mx-auto"
+                  className="mt-12 w-full sm:w-auto mx-auto rounded-sm overflow-hidden border border-gold/25 shadow-gold/10 shadow-lg bg-crimson-deep/90 backdrop-blur-sm px-3 py-2.5 flex flex-col gap-1.5"
                 >
                   <a
                     href="https://maps.google.com/?q=Tis+Hazari+Courts+Delhi"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 bg-crimson-deep/90 backdrop-blur-sm hover:bg-crimson-mid/90 transition-colors duration-200 px-5 py-3 w-full sm:w-auto border-b sm:border-b-0 sm:border-r border-gold/20"
+                    className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
                   >
-                    <MapPin className="h-4 w-4 text-gold flex-shrink-0" />
+                    <MapPin className="h-3.5 w-3.5 text-gold flex-shrink-0" />
                     <div className="text-left">
                       <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
                         Office
@@ -1022,11 +1023,12 @@ export default function App() {
                       </div>
                     </div>
                   </a>
+                  <div className="border-t border-gold/20" />
                   <a
                     href="tel:+919654083085"
-                    className="flex items-center gap-2.5 bg-crimson-deep/90 backdrop-blur-sm hover:bg-crimson-mid/90 transition-colors duration-200 px-5 py-3 w-full sm:w-auto border-b sm:border-b-0 sm:border-r border-gold/20"
+                    className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
                   >
-                    <Phone className="h-4 w-4 text-gold flex-shrink-0" />
+                    <Phone className="h-3.5 w-3.5 text-gold flex-shrink-0" />
                     <div className="text-left">
                       <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
                         Call Us
@@ -1034,6 +1036,36 @@ export default function App() {
                       <div className="text-cream text-xs">
                         +91 96540 83085 / 87505 05255
                       </div>
+                    </div>
+                  </a>
+                  <div className="border-t border-gold/20" />
+                  <a
+                    href="mailto:sachinupadhayay146@gmail.com"
+                    className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+                  >
+                    <Mail className="h-3.5 w-3.5 text-gold flex-shrink-0" />
+                    <div className="text-left">
+                      <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
+                        Email
+                      </div>
+                      <div className="text-cream text-xs">
+                        sachinupadhayay146@gmail.com
+                      </div>
+                    </div>
+                  </a>
+                  <div className="border-t border-gold/20" />
+                  <a
+                    href="https://instagram.com/its_adv_sachin"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+                  >
+                    <Instagram className="h-3.5 w-3.5 text-gold flex-shrink-0" />
+                    <div className="text-left">
+                      <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
+                        Instagram
+                      </div>
+                      <div className="text-cream text-xs">@its_adv_sachin</div>
                     </div>
                   </a>
                 </motion.div>
