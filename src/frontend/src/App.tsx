@@ -1015,27 +1015,20 @@ export default function App() {
               }}
               className="font-display text-3xl sm:text-5xl md:text-7xl font-bold text-cream leading-[1.1] mb-4"
             >
-              {["UPADHYAY", "LAW", "CHAMBERS"].map((word) => (
-                <motion.span
-                  key={word}
-                  variants={{
-                    hidden: { opacity: 0, y: 48, rotateX: -15 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      rotateX: 0,
-                      transition: {
-                        duration: 0.7,
-                        ease: [0.22, 1, 0.36, 1],
-                      },
-                    },
-                  }}
-                  className="inline-block mr-[0.25em] last:mr-0"
-                  style={{ display: "inline-block" }}
-                >
-                  {word}
-                </motion.span>
-              ))}
+              <motion.span
+                variants={{
+                  hidden: { opacity: 0, y: 48, rotateX: -15 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    rotateX: 0,
+                    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+                  },
+                }}
+                className="inline-block text-gold tracking-widest"
+              >
+                UPADHYAY LAW CHAMBERS
+              </motion.span>
             </motion.h1>
 
             <motion.p
