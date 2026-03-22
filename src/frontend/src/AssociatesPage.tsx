@@ -9,6 +9,7 @@ import {
   HeartHandshake,
   Landmark,
   Scale,
+  UserCheck,
 } from "lucide-react";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
@@ -47,6 +48,7 @@ const ASSOCIATES = [
     id: "associates.item.1",
     name: "Adv. Ravi Shrivastava",
     initials: "RS",
+    title: "Senior Associate",
     specialization: "Criminal Law",
     specialIcon: Gavel,
     bio: "Adv. Ravi Shrivastava brings sharp criminal law acumen honed across the corridors of the Delhi High Court and every district court complex the capital has to offer. From Tis Hazari to Karkardooma, Rohini to Saket, no jurisdiction in Delhi — or beyond — is unfamiliar terrain. His practice spans bail applications, trial advocacy, and appeals with a track record that speaks across India's legal landscape.",
@@ -58,9 +60,27 @@ const ASSOCIATES = [
     ],
   },
   {
+    id: "associates.item.4",
+    name: "Adv. Prem Grover",
+    initials: "PG",
+    title: "Senior Associate",
+    specialization: "Corporate, Civil & DRT",
+    specialIcon: Building2,
+    bio: "Adv. Prem Grover is a Senior Associate at UPADHYAY LAW CHAMBERS with extensive experience spanning Corporate Law, Civil Litigation, NI Act (Negotiable Instruments Act / Cheque Bounce) cases, and Debt Recovery Tribunal (DRT) proceedings. He represents banks, NBFCs, corporate clients, and individuals in complex financial recovery matters, civil suits, property disputes, and cheque dishonour cases. His practice extends from the Delhi High Court and all district courts of Delhi to tribunals and commercial courts across India.",
+    credentials: [
+      "Bar Council of Delhi",
+      "Delhi High Court",
+      "Debt Recovery Tribunal (DRT)",
+      "Civil & Property Disputes",
+      "NI Act / Cheque Bounce Cases",
+      "Corporate & Financial Law",
+    ],
+  },
+  {
     id: "associates.item.2",
     name: "Adv. Neetu Rawat",
     initials: "NR",
+    title: "Associate",
     specialization: "Family Law",
     specialIcon: HeartHandshake,
     bio: "Adv. Neetu Rawat is a seasoned family law practitioner whose expertise spans matrimonial disputes, child custody, maintenance, and succession matters before the Delhi High Court and the full breadth of Delhi's district court network. With a practice that recognises no geographical boundary, she has guided families from Tis Hazari to courtrooms far beyond Delhi — wherever justice needs a firm yet empathetic hand.",
@@ -75,6 +95,7 @@ const ASSOCIATES = [
     id: "associates.item.3",
     name: "Adv. Aniket Pandey",
     initials: "AP",
+    title: "Associate",
     specialization: "Corporate Law & DRT",
     specialIcon: Briefcase,
     bio: "Adv. Aniket Pandey is a focused corporate and debt recovery specialist with a commanding presence before the Debt Recovery Tribunal (DRT), Delhi High Court, and district courts across the capital. He advises corporations, banks, and financial institutions on loan recovery, SARFAESI proceedings, and corporate disputes — carrying his expertise seamlessly to any forum across India.",
@@ -86,17 +107,19 @@ const ASSOCIATES = [
     ],
   },
   {
-    id: "associates.item.4",
-    name: "Adv. Prem Grover",
-    initials: "PG",
-    specialization: "Corporate Law & DRT",
-    specialIcon: Building2,
-    bio: "Adv. Prem Grover combines deep corporate law knowledge with extensive experience in Debt Recovery Tribunal (DRT) proceedings, representing banks, NBFCs, and corporate clients in complex financial recovery matters. His practice extends from the Delhi High Court and all district courts of Delhi to tribunals and commercial courts across India, wherever the matter demands.",
+    id: "associates.item.5",
+    name: "Adv. Ayush Yadav",
+    initials: "AY",
+    title: "Associate",
+    specialization: "Civil Law",
+    specialIcon: UserCheck,
+    bio: "Adv. Ayush Yadav is a dedicated civil law advocate with a growing practice before the Delhi High Court and district courts across the capital. He handles a wide range of civil matters including property disputes, suits for permanent injunction, declaration suits, recovery suits, specific performance, and execution proceedings. Known for his meticulous approach to pleadings and thorough preparation, Adv. Yadav brings diligence and commitment to every matter he undertakes — from Tis Hazari Courts to civil courts across India.",
     credentials: [
       "Bar Council of Delhi",
       "Delhi High Court",
-      "Debt Recovery Tribunal (DRT)",
-      "Corporate & Financial Law",
+      "All District Courts, Delhi",
+      "Civil & Property Law",
+      "Injunctions & Declaratory Suits",
     ],
   },
 ] as const;
@@ -201,11 +224,14 @@ export default function AssociatesPage({ onBack }: { onBack: () => void }) {
                         </div>
                       </div>
 
-                      {/* Name + specialization */}
+                      {/* Name + title + specialization */}
                       <div className="flex-1 min-w-0">
-                        <h2 className="font-display text-xl font-bold text-foreground leading-tight mb-2">
+                        <h2 className="font-display text-xl font-bold text-foreground leading-tight mb-1">
                           {associate.name}
                         </h2>
+                        <p className="text-gold/70 text-xs font-semibold tracking-wider uppercase mb-2">
+                          {associate.title}
+                        </p>
                         <Badge
                           className="bg-gold/15 text-gold border border-gold/30 text-[10px] font-semibold tracking-wider uppercase hover:bg-gold/25 transition-colors"
                           variant="outline"

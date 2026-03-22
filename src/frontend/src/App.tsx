@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,13 +32,13 @@ import {
   Scale,
   Shield,
   TrendingUp,
+  UserCheck,
   Users,
   X,
 } from "lucide-react";
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Toaster, toast } from "sonner";
-import AssociatesPage from "./AssociatesPage";
 import { LegalMatterType } from "./backend.d";
 
 /* ── Fade-in section wrapper ── */
@@ -129,6 +130,88 @@ function AnimatedCounter({
 }
 
 /* ── Nav links ── */
+
+const ASSOCIATES = [
+  {
+    id: "associates.item.1",
+    name: "Adv. Ravi Shrivastava",
+    initials: "RS",
+    title: "Senior Associate",
+    specialization: "Criminal Law",
+    specialIcon: Gavel,
+    bio: "Adv. Ravi Shrivastava brings sharp criminal law acumen honed across the corridors of the Delhi High Court and every district court complex the capital has to offer. From Tis Hazari to Karkardooma, Rohini to Saket, no jurisdiction in Delhi — or beyond — is unfamiliar terrain. His practice spans bail applications, trial advocacy, and appeals with a track record that speaks across India's legal landscape.",
+    credentials: [
+      "Bar Council of Delhi",
+      "Delhi High Court",
+      "All District Courts, Delhi",
+      "Criminal Defense & Prosecution",
+    ],
+  },
+  {
+    id: "associates.item.4",
+    name: "Adv. Prem Grover",
+    initials: "PG",
+    title: "Senior Associate",
+    specialization: "Corporate, Civil & DRT",
+    specialIcon: Building2,
+    bio: "Adv. Prem Grover is a Senior Associate at UPADHYAY LAW CHAMBERS with extensive experience spanning Corporate Law, Civil Litigation, NI Act (Negotiable Instruments Act / Cheque Bounce) cases, and Debt Recovery Tribunal (DRT) proceedings. He represents banks, NBFCs, corporate clients, and individuals in complex financial recovery matters, civil suits, property disputes, and cheque dishonour cases. His practice extends from the Delhi High Court and all district courts of Delhi to tribunals and commercial courts across India.",
+    credentials: [
+      "Bar Council of Delhi",
+      "Delhi High Court",
+      "Debt Recovery Tribunal (DRT)",
+      "Civil & Property Disputes",
+      "NI Act / Cheque Bounce Cases",
+      "Corporate & Financial Law",
+    ],
+  },
+  {
+    id: "associates.item.2",
+    name: "Adv. Neetu Rawat",
+    initials: "NR",
+    title: "Associate",
+    specialization: "Family Law",
+    specialIcon: HeartHandshake,
+    bio: "Adv. Neetu Rawat is a seasoned family law practitioner whose expertise spans matrimonial disputes, child custody, maintenance, and succession matters before the Delhi High Court and the full breadth of Delhi's district court network. With a practice that recognises no geographical boundary, she has guided families from Tis Hazari to courtrooms far beyond Delhi — wherever justice needs a firm yet empathetic hand.",
+    credentials: [
+      "Bar Council of Delhi",
+      "Delhi High Court",
+      "All District Courts, Delhi",
+      "Family & Matrimonial Law",
+    ],
+  },
+  {
+    id: "associates.item.3",
+    name: "Adv. Aniket Pandey",
+    initials: "AP",
+    title: "Associate",
+    specialization: "Corporate Law & DRT",
+    specialIcon: Briefcase,
+    bio: "Adv. Aniket Pandey is a focused corporate and debt recovery specialist with a commanding presence before the Debt Recovery Tribunal (DRT), Delhi High Court, and district courts across the capital. He advises corporations, banks, and financial institutions on loan recovery, SARFAESI proceedings, and corporate disputes — carrying his expertise seamlessly to any forum across India.",
+    credentials: [
+      "Bar Council of Delhi",
+      "Delhi High Court",
+      "Debt Recovery Tribunal (DRT)",
+      "Corporate & Commercial Law",
+    ],
+  },
+  {
+    id: "associates.item.5",
+    name: "Adv. Ayush Yadav",
+    initials: "AY",
+    title: "Associate",
+    specialization: "Civil Law",
+    specialIcon: UserCheck,
+    bio: "Adv. Ayush Yadav is a dedicated civil law advocate with a growing practice before the Delhi High Court and district courts across the capital. He handles a wide range of civil matters including property disputes, suits for permanent injunction, declaration suits, recovery suits, specific performance, and execution proceedings. Known for his meticulous approach to pleadings and thorough preparation, Adv. Yadav brings diligence and commitment to every matter he undertakes — from Tis Hazari Courts to civil courts across India.",
+    credentials: [
+      "Bar Council of Delhi",
+      "Delhi High Court",
+      "All District Courts, Delhi",
+      "Civil & Property Law",
+      "Injunctions & Declaratory Suits",
+    ],
+  },
+] as const;
+
 const NAV_LINKS = [
   { href: "#home", label: "Home", shortLabel: "Home" },
   { href: "#about", label: "About", shortLabel: "About" },
@@ -237,7 +320,7 @@ const SERVICES = [
 const WHY_US = [
   {
     icon: Award,
-    title: "10+ Years of Experience",
+    title: "13+ Years of Experience",
     description:
       "Extensive courtroom experience across Supreme Court, High Court and District Court jurisdictions.",
   },
@@ -264,7 +347,7 @@ const WHY_US = [
 /* ── Stats ── */
 const STATS = [
   { value: "500+", label: "Cases Won" },
-  { value: "10+", label: "Years Experience" },
+  { value: "13+", label: "Years Experience" },
   { value: "1000+", label: "Happy Clients" },
   { value: "98%", label: "Success Rate" },
 ];
@@ -713,7 +796,6 @@ export default function App() {
   const [showDisclaimer, setShowDisclaimer] = useState(() =>
     isAdmin ? true : !localStorage.getItem("ulc_disclaimer_agreed"),
   );
-  const [page, setPage] = useState<"home" | "associates">("home");
   const [_menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -730,23 +812,9 @@ export default function App() {
   };
 
   const handleNavClick = (href: string) => {
-    if (href === "#associates") {
-      setPage("associates");
-      setMenuOpen(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      setMenuOpen(false);
-      if (page !== "home") {
-        setPage("home");
-        setTimeout(() => {
-          const el = document.querySelector(href);
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }, 80);
-      } else {
-        const el = document.querySelector(href);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }
-    }
+    setMenuOpen(false);
+    const el = document.querySelector(href);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   const currentYear = new Date().getFullYear();
@@ -837,12 +905,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => {
-              if (page === "associates") {
-                setPage("home");
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              } else {
-                scrollTo("#home");
-              }
+              scrollTo("#home");
             }}
             className="flex items-center gap-2.5 shrink-0 group"
             aria-label="UPADHYAY LAW CHAMBERS – Home"
@@ -858,8 +921,7 @@ export default function App() {
           <div className="flex-1 min-w-0 overflow-x-auto scrollbar-hide">
             <ul className="flex items-center gap-0 whitespace-nowrap min-w-0">
               {NAV_LINKS.map((link, i) => {
-                const isActive =
-                  link.href === "#associates" && page === "associates";
+                const isActive = false;
                 return (
                   <li key={link.href} className="shrink-0">
                     <a
@@ -893,626 +955,719 @@ export default function App() {
         </nav>
       </header>
 
-      {page === "associates" ? (
-        <AssociatesPage onBack={() => setPage("home")} />
-      ) : (
-        <>
-          <main>
-            {/* ─────────── HERO ─────────── */}
-            <section
-              id="home"
-              className="relative min-h-screen flex items-center justify-center overflow-hidden"
-            >
-              {/* Background image */}
-              {/* Lady of Justice background with zoom-in animation */}
-              <motion.div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{
-                  backgroundImage:
-                    "url('/assets/generated/lady-of-justice-hero.dim_1920x1080.jpg')",
-                }}
-                initial={{ scale: 1.12, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 2.2, ease: "easeOut" }}
-              />
-              {/* Dark overlay - slightly lighter to reveal the image */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.10_0.04_245/0.75)] via-[oklch(0.13_0.05_245/0.65)] to-[oklch(0.10_0.04_245/0.88)]" />
-              {/* Golden radial glow from center */}
-              <motion.div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(ellipse 70% 60% at 50% 40%, oklch(0.75 0.18 85 / 0.12) 0%, transparent 70%)",
-                }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 3, delay: 0.8 }}
-              />
-              {/* Subtle shimmer pulse on the gold glow */}
-              <motion.div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(ellipse 50% 40% at 50% 35%, oklch(0.85 0.20 85 / 0.08) 0%, transparent 60%)",
-                }}
-                animate={{ opacity: [0.4, 1, 0.4] }}
-                transition={{
-                  duration: 4,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                }}
-              />
-              {/* Gold line accent */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-60" />
+      <main>
+        {/* ─────────── HERO ─────────── */}
+        <section
+          id="home"
+          className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        >
+          {/* Background image */}
+          {/* Lady of Justice background with zoom-in animation */}
+          <motion.div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage:
+                "url('/assets/generated/lady-of-justice-hero.dim_1920x1080.jpg')",
+            }}
+            initial={{ scale: 1.12, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 2.2, ease: "easeOut" }}
+          />
+          {/* Dark overlay - slightly lighter to reveal the image */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.10_0.04_245/0.75)] via-[oklch(0.13_0.05_245/0.65)] to-[oklch(0.10_0.04_245/0.88)]" />
+          {/* Golden radial glow from center */}
+          <motion.div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 60% at 50% 40%, oklch(0.75 0.18 85 / 0.12) 0%, transparent 70%)",
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 3, delay: 0.8 }}
+          />
+          {/* Subtle shimmer pulse on the gold glow */}
+          <motion.div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 50% 40% at 50% 35%, oklch(0.85 0.20 85 / 0.08) 0%, transparent 60%)",
+            }}
+            animate={{ opacity: [0.4, 1, 0.4] }}
+            transition={{
+              duration: 4,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          {/* Gold line accent */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-60" />
 
-              <div className="relative z-10 container mx-auto px-4 text-center pt-32 sm:pt-40 pb-20 sm:pb-28">
-                <motion.h1
-                  initial="hidden"
-                  animate="visible"
+          <div className="relative z-10 container mx-auto px-4 text-center pt-32 sm:pt-40 pb-20 sm:pb-28">
+            <motion.h1
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+                },
+              }}
+              className="font-display text-3xl sm:text-5xl md:text-7xl font-bold text-cream leading-[1.1] mb-4"
+            >
+              {["UPADHYAY", "LAW", "CHAMBERS"].map((word) => (
+                <motion.span
+                  key={word}
                   variants={{
-                    hidden: {},
+                    hidden: { opacity: 0, y: 48, rotateX: -15 },
                     visible: {
-                      transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+                      opacity: 1,
+                      y: 0,
+                      rotateX: 0,
+                      transition: {
+                        duration: 0.7,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
                     },
                   }}
-                  className="font-display text-3xl sm:text-5xl md:text-7xl font-bold text-cream leading-[1.1] mb-4"
+                  className="inline-block mr-[0.25em] last:mr-0"
+                  style={{ display: "inline-block" }}
                 >
-                  {["UPADHYAY", "LAW", "CHAMBERS"].map((word) => (
-                    <motion.span
-                      key={word}
-                      variants={{
-                        hidden: { opacity: 0, y: 48, rotateX: -15 },
-                        visible: {
-                          opacity: 1,
-                          y: 0,
-                          rotateX: 0,
-                          transition: {
-                            duration: 0.7,
-                            ease: [0.22, 1, 0.36, 1],
-                          },
-                        },
+                  {word}
+                </motion.span>
+              ))}
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
+              className="text-cream/80 text-base sm:text-lg max-w-2xl mx-auto mb-2 font-display font-medium tracking-wide"
+            >
+              Adv. Sachin Upadhyay
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+              className="text-cream/65 text-base sm:text-lg max-w-xl mx-auto mb-10 leading-relaxed"
+            >
+              13+ Years Practice &nbsp;|&nbsp; Supreme Court of India
+              &nbsp;|&nbsp; All High Courts &amp; District Courts
+            </motion.p>
+
+            {/* ── Office + Call Us unified card ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.65, ease: "easeOut" }}
+              data-ocid="hero.office.card"
+              className="mt-12 w-full sm:w-auto mx-auto rounded-sm overflow-hidden border border-gold/25 shadow-gold/10 shadow-lg bg-crimson-deep/90 backdrop-blur-sm px-3 py-2.5 flex flex-col gap-1.5"
+            >
+              <a
+                href="https://maps.google.com/?q=Tis+Hazari+Courts+Delhi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+              >
+                <MapPin className="h-3.5 w-3.5 text-gold flex-shrink-0" />
+                <div className="text-left">
+                  <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
+                    Office
+                  </div>
+                  <div className="text-cream text-xs leading-snug">
+                    Chamber No. 44, Western Wing, Tis Hazari Courts
+                  </div>
+                </div>
+              </a>
+              <div className="border-t border-gold/20" />
+              <a
+                href="tel:+919654083085"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+              >
+                <Phone className="h-3.5 w-3.5 text-gold flex-shrink-0" />
+                <div className="text-left">
+                  <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
+                    Call Us
+                  </div>
+                  <div className="text-cream text-xs">
+                    +91 96540 83085 / 87505 05255
+                  </div>
+                </div>
+              </a>
+              <div className="border-t border-gold/20" />
+              <a
+                href="mailto:sachinupadhayay146@gmail.com"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+              >
+                <Mail className="h-3.5 w-3.5 text-gold flex-shrink-0" />
+                <div className="text-left">
+                  <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
+                    Email
+                  </div>
+                  <div className="text-cream text-xs">
+                    sachinupadhayay146@gmail.com
+                  </div>
+                </div>
+              </a>
+              <div className="border-t border-gold/20" />
+              <a
+                href="https://instagram.com/its_adv_sachin"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+              >
+                <Instagram className="h-3.5 w-3.5 text-gold flex-shrink-0" />
+                <div className="text-left">
+                  <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
+                    Instagram
+                  </div>
+                  <div className="text-cream text-xs">@its_adv_sachin</div>
+                </div>
+              </a>
+            </motion.div>
+          </div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          >
+            <span className="text-cream/45 text-xs tracking-widest uppercase">
+              Scroll
+            </span>
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{
+                duration: 1.6,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+            >
+              <ChevronDown className="h-5 w-5 text-gold/60" />
+            </motion.div>
+          </motion.div>
+        </section>
+
+        {/* ─────────── ABOUT ─────────── */}
+        <section id="about" className="py-14 md:py-24 bg-background">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              {/* Image column */}
+              <FadeIn>
+                <div className="relative">
+                  <div className="absolute -top-4 -left-4 w-full h-full bg-gold/10 rounded-sm" />
+                  <div className="relative border-2 border-gold/30 rounded-sm overflow-hidden">
+                    <img
+                      src="/assets/generated/advocate-portrait.dim_600x700.jpg"
+                      alt="Adv. Sachin Upadhyay"
+                      className="w-full object-cover max-h-72 sm:max-h-none"
+                    />
+                  </div>
+                  {/* Floating credential badge */}
+                  <div className="hidden sm:block absolute -bottom-5 -right-5 bg-crimson-deep text-cream p-4 rounded-sm shadow-crimson border border-gold/20 max-w-[180px]">
+                    <div className="text-gold text-xs font-semibold tracking-wider uppercase mb-1">
+                      Bar Enrolled
+                    </div>
+                    <div className="text-sm font-display font-bold leading-tight">
+                      Bar Council of Delhi
+                    </div>
+                    <div className="text-cream/65 text-xs mt-1">Since 2014</div>
+                  </div>
+                </div>
+              </FadeIn>
+
+              {/* Text column */}
+              <FadeIn delay={0.15}>
+                <div>
+                  <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
+                    About The Advocate
+                  </div>
+                  <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+                    Adv. Sachin Upadhyay
+                  </h2>
+                  <div className="w-16 h-0.5 bg-gold mb-6" />
+
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    Advocate Sachin Upadhyay is a distinguished legal
+                    professional enrolled with the Bar Council of Delhi, with
+                    dedicated practice before the Supreme Court of India, Delhi
+                    High Court, various High Courts across India, and all
+                    District Courts. His practice spans criminal defense, civil
+                    litigation, corporate advisory, and family law.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed mb-8">
+                    Known for his meticulous case preparation, sharp courtroom
+                    advocacy, and unwavering commitment to client interests,
+                    Adv. Upadhyay has secured favorable outcomes in over 500
+                    cases across diverse legal domains. With 13+ years of
+                    dedicated practice, UPADHYAY LAW CHAMBERS stands as a
+                    trusted name in Indian legal services.
+                  </p>
+
+                  {/* Credentials */}
+                  <ul className="space-y-2.5 mb-10">
+                    {[
+                      "Enrolled with Bar Council of Delhi",
+                      "Practicing before Supreme Court of India",
+                      "Member, Delhi High Court Bar Association",
+                      "Specialization in Criminal & Civil Litigation",
+                      "Chamber No. 44, Western Wing, Tis Hazari Courts, Delhi",
+                    ].map((cred) => (
+                      <li
+                        key={cred}
+                        className="flex items-start gap-2.5 text-sm text-foreground"
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-gold mt-0.5 flex-shrink-0" />
+                        <span>{cred}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {STATS.map((stat) => (
+                      <AnimatedCounter
+                        key={stat.label}
+                        value={stat.value}
+                        label={stat.label}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+          </div>
+        </section>
+
+        {/* ─────────── ASSOCIATES ─────────── */}
+        <section id="associates" className="py-14 md:py-24 bg-secondary/20">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <FadeIn className="text-center mb-10 md:mb-16">
+              <div className="inline-flex items-center gap-2 bg-gold/15 border border-gold/30 text-gold text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-full mb-6">
+                <Scale className="h-3.5 w-3.5" />
+                <span>Our Legal Team</span>
+              </div>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+                Associates
+              </h2>
+              <div className="w-24 h-0.5 bg-gradient-to-r from-gold/20 via-gold to-gold/20 mx-auto mb-6" />
+              <p className="text-muted-foreground max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
+                A distinguished panel of legal professionals who collectively
+                command Delhi's entire court ecosystem — and carry that
+                authority wherever in India their clients may need them.
+              </p>
+            </FadeIn>
+
+            <div className="grid sm:grid-cols-2 gap-8">
+              {ASSOCIATES.map((associate, i) => (
+                <FadeIn key={associate.id} delay={i * 0.12}>
+                  <div
+                    data-ocid={associate.id}
+                    className="group relative bg-card border border-border hover:border-gold/50 rounded-sm shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden flex flex-col h-full"
+                  >
+                    <div className="absolute top-0 left-0 w-1 h-0 bg-gold group-hover:h-full transition-all duration-500 rounded-tl-sm" />
+                    <div className="p-5 sm:p-7 flex flex-col flex-1">
+                      <div className="flex items-start gap-4 mb-6">
+                        <div className="relative flex-shrink-0">
+                          <div className="w-16 h-16 rounded-full bg-crimson-deep border-2 border-gold/30 flex items-center justify-center shadow-crimson group-hover:border-gold/60 transition-colors duration-300">
+                            <span className="font-display text-xl font-bold text-gold">
+                              {associate.initials}
+                            </span>
+                          </div>
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-gold flex items-center justify-center shadow-sm">
+                            <associate.specialIcon className="h-3 w-3 text-crimson-deep" />
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-display text-xl font-bold text-foreground leading-tight mb-1">
+                            {associate.name}
+                          </h3>
+                          <p className="text-gold/70 text-xs font-semibold tracking-wider uppercase mb-2">
+                            {associate.title}
+                          </p>
+                          <Badge
+                            className="bg-gold/15 text-gold border border-gold/30 text-[10px] font-semibold tracking-wider uppercase hover:bg-gold/25 transition-colors"
+                            variant="outline"
+                          >
+                            {associate.specialization}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="w-full h-px bg-border mb-5" />
+                      <p className="text-muted-foreground text-sm leading-relaxed mb-6 flex-1">
+                        {associate.bio}
+                      </p>
+                      <div className="bg-secondary/60 rounded-sm p-4 border border-border/50">
+                        <div className="text-gold text-[10px] font-semibold tracking-widest uppercase mb-3 flex items-center gap-1.5">
+                          <Award className="h-3 w-3" />
+                          <span>Credentials & Jurisdictions</span>
+                        </div>
+                        <ul className="space-y-2">
+                          {associate.credentials.map((cred) => (
+                            <li
+                              key={cred}
+                              className="flex items-center gap-2 text-xs text-foreground"
+                            >
+                              <CheckCircle2 className="h-3.5 w-3.5 text-gold flex-shrink-0" />
+                              <span>{cred}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+
+            <FadeIn delay={0.25} className="mt-12">
+              <div className="bg-crimson-deep/5 border border-gold/20 rounded-sm p-7 text-center">
+                <div className="w-12 h-12 rounded-full bg-crimson-deep mx-auto flex items-center justify-center mb-4 shadow-crimson">
+                  <Landmark className="h-6 w-6 text-gold" />
+                </div>
+                <h3 className="font-display text-xl font-bold text-foreground mb-2">
+                  Collective Pan-India Reach
+                </h3>
+                <div className="w-12 h-0.5 bg-gold mx-auto mb-4" />
+                <p className="text-muted-foreground text-sm leading-relaxed max-w-2xl mx-auto">
+                  Together, the associates of UPADHYAY LAW CHAMBERS cover the
+                  Supreme Court of India, the Delhi High Court, all five
+                  district court complexes in Delhi, and through their
+                  collective practice network, extend effective legal
+                  representation to any court across the length and breadth of
+                  India.
+                </p>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* ─────────── PRACTICE AREAS ─────────── */}
+        <section id="practice" className="py-14 md:py-24 bg-crimson-deep">
+          <div className="container mx-auto px-4">
+            <FadeIn className="text-center mb-10 md:mb-16">
+              <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
+                Areas of Expertise
+              </div>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-cream mb-4">
+                Practice Areas
+              </h2>
+              <p className="text-cream/65 max-w-xl mx-auto leading-relaxed">
+                Comprehensive legal representation across multiple domains of
+                law with deep expertise and proven track record.
+              </p>
+            </FadeIn>
+
+            <motion.div
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+            >
+              {PRACTICE_AREAS.map((area, i) => (
+                <motion.div key={area.title} variants={staggerItem}>
+                  <div
+                    data-ocid={`practice.item.${i + 1}`}
+                    className="group bg-crimson-mid/60 border border-white/10 hover:border-gold/60 rounded-sm p-4 sm:p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(201,168,76,0.22)]"
+                  >
+                    <div className="w-12 h-12 rounded-sm bg-gold/15 border border-gold/25 flex items-center justify-center mb-5 group-hover:bg-gold/25 transition-colors duration-300">
+                      <area.icon className="h-6 w-6 text-gold" />
+                    </div>
+                    <h3 className="font-display text-xl font-bold text-cream mb-3">
+                      {area.title}
+                    </h3>
+                    <p className="text-cream/60 text-sm leading-relaxed">
+                      {area.description}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ─────────── SERVICES ─────────── */}
+        <section id="services" className="py-14 md:py-24 bg-background">
+          <div className="container mx-auto px-4">
+            <FadeIn className="text-center mb-10 md:mb-16">
+              <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
+                What We Offer
+              </div>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+                Legal Services
+              </h2>
+              <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                End-to-end legal support from initial consultation to final
+                verdict and beyond.
+              </p>
+            </FadeIn>
+
+            <motion.div
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+            >
+              {SERVICES.map((service) => (
+                <motion.div key={service.title} variants={staggerItem}>
+                  <div className="group relative bg-card border border-border hover:border-gold/50 rounded-sm p-4 sm:p-6 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(201,168,76,0.18)]">
+                    <div className="absolute top-0 left-0 w-1 h-0 bg-gold rounded-tl-sm group-hover:h-full transition-all duration-300" />
+                    <service.icon className="h-7 w-7 text-gold mb-4" />
+                    <h3 className="font-display text-lg font-bold text-foreground mb-2">
+                      {service.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {service.description}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ─────────── WHY CHOOSE US ─────────── */}
+        <section className="py-20 bg-secondary/60">
+          <div className="container mx-auto px-4">
+            <FadeIn className="text-center mb-14">
+              <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
+                The UPADHYAY LAW CHAMBERS Advantage
+              </div>
+              <h2 className="font-display text-4xl font-bold text-foreground">
+                Why Choose Us
+              </h2>
+            </FadeIn>
+
+            <motion.div
+              className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+            >
+              {WHY_US.map((item) => (
+                <motion.div key={item.title} variants={staggerItem}>
+                  <div className="text-center p-4 sm:p-6">
+                    <div className="w-14 h-14 rounded-full bg-crimson-deep mx-auto flex items-center justify-center mb-4 shadow-crimson">
+                      <item.icon className="h-7 w-7 text-gold" />
+                    </div>
+                    <h3 className="font-display text-lg font-bold text-foreground mb-2">
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ─────────── COURTS WE PRACTICE IN ─────────── */}
+        <section id="courts" className="py-14 md:py-24 bg-crimson-deep">
+          <div className="container mx-auto px-4">
+            <FadeIn className="text-center mb-10 md:mb-16">
+              <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
+                Pan-India Practice
+              </div>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-cream mb-4">
+                Courts We Practice In
+              </h2>
+              <p className="text-cream/65 max-w-2xl mx-auto leading-relaxed">
+                We represent clients before all major courts and tribunals
+                across India — from the Supreme Court to District Courts in
+                every state.
+              </p>
+            </FadeIn>
+
+            {/* Supreme Court – Featured Card */}
+            <FadeIn delay={0.1}>
+              <div
+                data-ocid="courts.supreme.card"
+                className="mb-10 border border-gold/40 rounded-sm overflow-hidden"
+              >
+                <div className="bg-gradient-to-r from-gold/20 to-gold/5 px-4 py-4 sm:px-8 sm:py-6 flex flex-col sm:flex-row items-center gap-5">
+                  <div className="w-16 h-16 rounded-full bg-gold/20 border-2 border-gold/40 flex items-center justify-center flex-shrink-0">
+                    <Landmark className="h-8 w-8 text-gold" />
+                  </div>
+                  <div className="text-center sm:text-left">
+                    <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-1">
+                      Apex Court of India
+                    </div>
+                    <h3 className="font-display text-2xl sm:text-3xl font-bold text-cream mb-1">
+                      Supreme Court of India
+                    </h3>
+                    <p className="text-cream/65 text-sm">
+                      New Delhi — Highest constitutional court. SLPs, Writ
+                      Petitions, Constitutional Matters &amp; Appeals.
+                    </p>
+                  </div>
+                  <div className="sm:ml-auto flex-shrink-0">
+                    <span className="inline-flex items-center gap-1.5 bg-gold/20 border border-gold/30 text-gold text-xs font-semibold tracking-wide uppercase px-3 py-1.5 rounded-full">
+                      <Scale className="h-3 w-3" />
+                      Supreme Court
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* High Courts */}
+            <FadeIn delay={0.15}>
+              <div
+                data-ocid="courts.highcourt.card"
+                className="mb-10 border border-gold/40 rounded-sm overflow-hidden"
+              >
+                <div className="bg-gradient-to-r from-gold/15 to-gold/5 px-4 py-4 sm:px-8 sm:py-6 flex flex-col sm:flex-row items-center gap-5">
+                  <div className="w-16 h-16 rounded-full bg-gold/20 border-2 border-gold/40 flex items-center justify-center flex-shrink-0">
+                    <Building2 className="h-8 w-8 text-gold" />
+                  </div>
+                  <div className="text-center sm:text-left">
+                    <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-1">
+                      Pan-India
+                    </div>
+                    <h3 className="font-display text-2xl sm:text-3xl font-bold text-cream mb-1">
+                      High Courts
+                    </h3>
+                    <p className="text-cream/65 text-sm">
+                      Practice before all High Courts across India — Delhi,
+                      Bombay, Calcutta, Madras, Allahabad &amp; more.
+                    </p>
+                  </div>
+                  <div className="sm:ml-auto flex-shrink-0">
+                    <span className="inline-flex items-center gap-1.5 bg-gold/20 border border-gold/30 text-gold text-xs font-semibold tracking-wide uppercase px-3 py-1.5 rounded-full">
+                      <Building2 className="h-3 w-3" />
+                      High Court
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+      </main>
+      <footer className="bg-crimson-deep border-t border-white/10">
+        <div className="container mx-auto px-4 py-10 md:py-14">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 mb-12">
+            {/* Brand */}
+            <div className="lg:col-span-1">
+              <div className="flex items-center gap-3 mb-4">
+                <img
+                  src="/assets/generated/logo-transparent.dim_400x400.png"
+                  alt="UPADHYAY LAW CHAMBERS"
+                  className="h-20 w-auto object-contain max-w-[200px]"
+                />
+              </div>
+              <p className="text-cream/55 text-sm leading-relaxed">
+                Providing trusted legal counsel to individuals and businesses
+                across India since 2014. Supreme Court &amp; All India Practice.
+              </p>
+            </div>
+
+            {/* Quick links */}
+            <div>
+              <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">
+                Quick Links
+              </h4>
+              <ul className="space-y-2.5">
+                {NAV_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      data-ocid={
+                        link.href === "#associates"
+                          ? "footer.associates.link"
+                          : undefined
+                      }
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleNavClick(link.href);
                       }}
-                      className="inline-block mr-[0.25em] last:mr-0"
-                      style={{ display: "inline-block" }}
+                      className="text-cream/55 hover:text-gold text-sm transition-colors duration-200"
                     >
-                      {word}
-                    </motion.span>
-                  ))}
-                </motion.h1>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-                <motion.p
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
-                  className="text-cream/80 text-base sm:text-lg max-w-2xl mx-auto mb-2 font-display font-medium tracking-wide"
-                >
-                  Adv. Sachin Upadhyay
-                </motion.p>
+            {/* Practice areas */}
+            <div>
+              <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">
+                Practice Areas
+              </h4>
+              <ul className="space-y-2.5">
+                {PRACTICE_AREAS.map((a) => (
+                  <li key={a.title}>
+                    <button
+                      type="button"
+                      onClick={() => scrollTo("#practice")}
+                      className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 text-left"
+                    >
+                      {a.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-                <motion.p
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                  className="text-cream/65 text-base sm:text-lg max-w-xl mx-auto mb-10 leading-relaxed"
-                >
-                  10+ Years Practice &nbsp;|&nbsp; Supreme Court of India
-                  &nbsp;|&nbsp; All High Courts &amp; District Courts
-                </motion.p>
-
-                {/* ── Office + Call Us unified card ── */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.65, ease: "easeOut" }}
-                  data-ocid="hero.office.card"
-                  className="mt-12 w-full sm:w-auto mx-auto rounded-sm overflow-hidden border border-gold/25 shadow-gold/10 shadow-lg bg-crimson-deep/90 backdrop-blur-sm px-3 py-2.5 flex flex-col gap-1.5"
-                >
-                  <a
-                    href="https://maps.google.com/?q=Tis+Hazari+Courts+Delhi"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
-                  >
-                    <MapPin className="h-3.5 w-3.5 text-gold flex-shrink-0" />
-                    <div className="text-left">
-                      <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
-                        Office
-                      </div>
-                      <div className="text-cream text-xs leading-snug">
-                        Chamber No. 44, Western Wing, Tis Hazari Courts
-                      </div>
-                    </div>
-                  </a>
-                  <div className="border-t border-gold/20" />
-                  <a
-                    href="tel:+919654083085"
-                    className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
-                  >
-                    <Phone className="h-3.5 w-3.5 text-gold flex-shrink-0" />
-                    <div className="text-left">
-                      <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
-                        Call Us
-                      </div>
-                      <div className="text-cream text-xs">
-                        +91 96540 83085 / 87505 05255
-                      </div>
-                    </div>
-                  </a>
-                  <div className="border-t border-gold/20" />
+            {/* Contact */}
+            <div>
+              <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">
+                Contact
+              </h4>
+              <ul className="space-y-3">
+                <li>
                   <a
                     href="mailto:sachinupadhayay146@gmail.com"
-                    className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+                    className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 flex items-center gap-2"
                   >
-                    <Mail className="h-3.5 w-3.5 text-gold flex-shrink-0" />
-                    <div className="text-left">
-                      <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
-                        Email
-                      </div>
-                      <div className="text-cream text-xs">
-                        sachinupadhayay146@gmail.com
-                      </div>
-                    </div>
+                    <span className="text-gold">✉</span>
+                    sachinupadhayay146@gmail.com
                   </a>
-                  <div className="border-t border-gold/20" />
+                </li>
+                <li>
                   <a
                     href="https://instagram.com/its_adv_sachin"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+                    className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 flex items-center gap-2"
                   >
-                    <Instagram className="h-3.5 w-3.5 text-gold flex-shrink-0" />
-                    <div className="text-left">
-                      <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
-                        Instagram
-                      </div>
-                      <div className="text-cream text-xs">@its_adv_sachin</div>
-                    </div>
+                    <span className="text-gold">📷</span>
+                    @its_adv_sachin
                   </a>
-                </motion.div>
-              </div>
-
-              {/* Scroll indicator */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-              >
-                <span className="text-cream/45 text-xs tracking-widest uppercase">
-                  Scroll
-                </span>
-                <motion.div
-                  animate={{ y: [0, 8, 0] }}
-                  transition={{
-                    duration: 1.6,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <ChevronDown className="h-5 w-5 text-gold/60" />
-                </motion.div>
-              </motion.div>
-            </section>
-
-            {/* ─────────── ABOUT ─────────── */}
-            <section id="about" className="py-14 md:py-24 bg-background">
-              <div className="container mx-auto px-4">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
-                  {/* Image column */}
-                  <FadeIn>
-                    <div className="relative">
-                      <div className="absolute -top-4 -left-4 w-full h-full bg-gold/10 rounded-sm" />
-                      <div className="relative border-2 border-gold/30 rounded-sm overflow-hidden">
-                        <img
-                          src="/assets/generated/advocate-portrait.dim_600x700.jpg"
-                          alt="Adv. Sachin Upadhyay"
-                          className="w-full object-cover max-h-72 sm:max-h-none"
-                        />
-                      </div>
-                      {/* Floating credential badge */}
-                      <div className="hidden sm:block absolute -bottom-5 -right-5 bg-crimson-deep text-cream p-4 rounded-sm shadow-crimson border border-gold/20 max-w-[180px]">
-                        <div className="text-gold text-xs font-semibold tracking-wider uppercase mb-1">
-                          Bar Enrolled
-                        </div>
-                        <div className="text-sm font-display font-bold leading-tight">
-                          Bar Council of Delhi
-                        </div>
-                        <div className="text-cream/65 text-xs mt-1">
-                          Since 2014
-                        </div>
-                      </div>
-                    </div>
-                  </FadeIn>
-
-                  {/* Text column */}
-                  <FadeIn delay={0.15}>
-                    <div>
-                      <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
-                        About The Advocate
-                      </div>
-                      <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-                        Adv. Sachin Upadhyay
-                      </h2>
-                      <div className="w-16 h-0.5 bg-gold mb-6" />
-
-                      <p className="text-muted-foreground leading-relaxed mb-4">
-                        Advocate Sachin Upadhyay is a distinguished legal
-                        professional enrolled with the Bar Council of Delhi,
-                        with dedicated practice before the Supreme Court of
-                        India, Delhi High Court, various High Courts across
-                        India, and all District Courts. His practice spans
-                        criminal defense, civil litigation, corporate advisory,
-                        and family law.
-                      </p>
-                      <p className="text-muted-foreground leading-relaxed mb-8">
-                        Known for his meticulous case preparation, sharp
-                        courtroom advocacy, and unwavering commitment to client
-                        interests, Adv. Upadhyay has secured favorable outcomes
-                        in over 500 cases across diverse legal domains. With 10+
-                        years of dedicated practice, UPADHYAY LAW CHAMBERS
-                        stands as a trusted name in Indian legal services.
-                      </p>
-
-                      {/* Credentials */}
-                      <ul className="space-y-2.5 mb-10">
-                        {[
-                          "Enrolled with Bar Council of Delhi",
-                          "Practicing before Supreme Court of India",
-                          "Member, Delhi High Court Bar Association",
-                          "Specialization in Criminal & Civil Litigation",
-                          "Chamber No. 44, Western Wing, Tis Hazari Courts, Delhi",
-                        ].map((cred) => (
-                          <li
-                            key={cred}
-                            className="flex items-start gap-2.5 text-sm text-foreground"
-                          >
-                            <CheckCircle2 className="h-4 w-4 text-gold mt-0.5 flex-shrink-0" />
-                            <span>{cred}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      {/* Stats */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        {STATS.map((stat) => (
-                          <AnimatedCounter
-                            key={stat.label}
-                            value={stat.value}
-                            label={stat.label}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </FadeIn>
-                </div>
-              </div>
-            </section>
-
-            {/* ─────────── PRACTICE AREAS ─────────── */}
-            <section id="practice" className="py-14 md:py-24 bg-crimson-deep">
-              <div className="container mx-auto px-4">
-                <FadeIn className="text-center mb-10 md:mb-16">
-                  <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
-                    Areas of Expertise
-                  </div>
-                  <h2 className="font-display text-4xl md:text-5xl font-bold text-cream mb-4">
-                    Practice Areas
-                  </h2>
-                  <p className="text-cream/65 max-w-xl mx-auto leading-relaxed">
-                    Comprehensive legal representation across multiple domains
-                    of law with deep expertise and proven track record.
-                  </p>
-                </FadeIn>
-
-                <motion.div
-                  className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                  variants={staggerContainer}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-80px" }}
-                >
-                  {PRACTICE_AREAS.map((area, i) => (
-                    <motion.div key={area.title} variants={staggerItem}>
-                      <div
-                        data-ocid={`practice.item.${i + 1}`}
-                        className="group bg-crimson-mid/60 border border-white/10 hover:border-gold/60 rounded-sm p-4 sm:p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(201,168,76,0.22)]"
-                      >
-                        <div className="w-12 h-12 rounded-sm bg-gold/15 border border-gold/25 flex items-center justify-center mb-5 group-hover:bg-gold/25 transition-colors duration-300">
-                          <area.icon className="h-6 w-6 text-gold" />
-                        </div>
-                        <h3 className="font-display text-xl font-bold text-cream mb-3">
-                          {area.title}
-                        </h3>
-                        <p className="text-cream/60 text-sm leading-relaxed">
-                          {area.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </div>
-            </section>
-
-            {/* ─────────── SERVICES ─────────── */}
-            <section id="services" className="py-14 md:py-24 bg-background">
-              <div className="container mx-auto px-4">
-                <FadeIn className="text-center mb-10 md:mb-16">
-                  <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
-                    What We Offer
-                  </div>
-                  <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
-                    Legal Services
-                  </h2>
-                  <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                    End-to-end legal support from initial consultation to final
-                    verdict and beyond.
-                  </p>
-                </FadeIn>
-
-                <motion.div
-                  className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                  variants={staggerContainer}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-80px" }}
-                >
-                  {SERVICES.map((service) => (
-                    <motion.div key={service.title} variants={staggerItem}>
-                      <div className="group relative bg-card border border-border hover:border-gold/50 rounded-sm p-4 sm:p-6 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(201,168,76,0.18)]">
-                        <div className="absolute top-0 left-0 w-1 h-0 bg-gold rounded-tl-sm group-hover:h-full transition-all duration-300" />
-                        <service.icon className="h-7 w-7 text-gold mb-4" />
-                        <h3 className="font-display text-lg font-bold text-foreground mb-2">
-                          {service.title}
-                        </h3>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
-                          {service.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </div>
-            </section>
-
-            {/* ─────────── WHY CHOOSE US ─────────── */}
-            <section className="py-20 bg-secondary/60">
-              <div className="container mx-auto px-4">
-                <FadeIn className="text-center mb-14">
-                  <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
-                    The UPADHYAY LAW CHAMBERS Advantage
-                  </div>
-                  <h2 className="font-display text-4xl font-bold text-foreground">
-                    Why Choose Us
-                  </h2>
-                </FadeIn>
-
-                <motion.div
-                  className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
-                  variants={staggerContainer}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-80px" }}
-                >
-                  {WHY_US.map((item) => (
-                    <motion.div key={item.title} variants={staggerItem}>
-                      <div className="text-center p-4 sm:p-6">
-                        <div className="w-14 h-14 rounded-full bg-crimson-deep mx-auto flex items-center justify-center mb-4 shadow-crimson">
-                          <item.icon className="h-7 w-7 text-gold" />
-                        </div>
-                        <h3 className="font-display text-lg font-bold text-foreground mb-2">
-                          {item.title}
-                        </h3>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
-                          {item.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </div>
-            </section>
-
-            {/* ─────────── COURTS WE PRACTICE IN ─────────── */}
-            <section id="courts" className="py-14 md:py-24 bg-crimson-deep">
-              <div className="container mx-auto px-4">
-                <FadeIn className="text-center mb-10 md:mb-16">
-                  <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
-                    Pan-India Practice
-                  </div>
-                  <h2 className="font-display text-4xl md:text-5xl font-bold text-cream mb-4">
-                    Courts We Practice In
-                  </h2>
-                  <p className="text-cream/65 max-w-2xl mx-auto leading-relaxed">
-                    We represent clients before all major courts and tribunals
-                    across India — from the Supreme Court to District Courts in
-                    every state.
-                  </p>
-                </FadeIn>
-
-                {/* Supreme Court – Featured Card */}
-                <FadeIn delay={0.1}>
-                  <div
-                    data-ocid="courts.supreme.card"
-                    className="mb-10 border border-gold/40 rounded-sm overflow-hidden"
-                  >
-                    <div className="bg-gradient-to-r from-gold/20 to-gold/5 px-4 py-4 sm:px-8 sm:py-6 flex flex-col sm:flex-row items-center gap-5">
-                      <div className="w-16 h-16 rounded-full bg-gold/20 border-2 border-gold/40 flex items-center justify-center flex-shrink-0">
-                        <Landmark className="h-8 w-8 text-gold" />
-                      </div>
-                      <div className="text-center sm:text-left">
-                        <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-1">
-                          Apex Court of India
-                        </div>
-                        <h3 className="font-display text-2xl sm:text-3xl font-bold text-cream mb-1">
-                          Supreme Court of India
-                        </h3>
-                        <p className="text-cream/65 text-sm">
-                          New Delhi — Highest constitutional court. SLPs, Writ
-                          Petitions, Constitutional Matters &amp; Appeals.
-                        </p>
-                      </div>
-                      <div className="sm:ml-auto flex-shrink-0">
-                        <span className="inline-flex items-center gap-1.5 bg-gold/20 border border-gold/30 text-gold text-xs font-semibold tracking-wide uppercase px-3 py-1.5 rounded-full">
-                          <Scale className="h-3 w-3" />
-                          Supreme Court
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </FadeIn>
-
-                {/* High Courts */}
-                <FadeIn delay={0.15}>
-                  <div
-                    data-ocid="courts.highcourt.card"
-                    className="mb-10 border border-gold/40 rounded-sm overflow-hidden"
-                  >
-                    <div className="bg-gradient-to-r from-gold/15 to-gold/5 px-4 py-4 sm:px-8 sm:py-6 flex flex-col sm:flex-row items-center gap-5">
-                      <div className="w-16 h-16 rounded-full bg-gold/20 border-2 border-gold/40 flex items-center justify-center flex-shrink-0">
-                        <Building2 className="h-8 w-8 text-gold" />
-                      </div>
-                      <div className="text-center sm:text-left">
-                        <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-1">
-                          Pan-India
-                        </div>
-                        <h3 className="font-display text-2xl sm:text-3xl font-bold text-cream mb-1">
-                          High Courts
-                        </h3>
-                        <p className="text-cream/65 text-sm">
-                          Practice before all High Courts across India — Delhi,
-                          Bombay, Calcutta, Madras, Allahabad &amp; more.
-                        </p>
-                      </div>
-                      <div className="sm:ml-auto flex-shrink-0">
-                        <span className="inline-flex items-center gap-1.5 bg-gold/20 border border-gold/30 text-gold text-xs font-semibold tracking-wide uppercase px-3 py-1.5 rounded-full">
-                          <Building2 className="h-3 w-3" />
-                          High Court
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </FadeIn>
-              </div>
-            </section>
-          </main>
-          <footer className="bg-crimson-deep border-t border-white/10">
-            <div className="container mx-auto px-4 py-10 md:py-14">
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 mb-12">
-                {/* Brand */}
-                <div className="lg:col-span-1">
-                  <div className="flex items-center gap-3 mb-4">
-                    <img
-                      src="/assets/generated/logo-transparent.dim_400x400.png"
-                      alt="UPADHYAY LAW CHAMBERS"
-                      className="h-20 w-auto object-contain max-w-[200px]"
-                    />
-                  </div>
-                  <p className="text-cream/55 text-sm leading-relaxed">
-                    Providing trusted legal counsel to individuals and
-                    businesses across India since 2014. Supreme Court &amp; All
-                    India Practice.
-                  </p>
-                </div>
-
-                {/* Quick links */}
-                <div>
-                  <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">
-                    Quick Links
-                  </h4>
-                  <ul className="space-y-2.5">
-                    {NAV_LINKS.map((link) => (
-                      <li key={link.href}>
-                        <a
-                          href={link.href}
-                          data-ocid={
-                            link.href === "#associates"
-                              ? "footer.associates.link"
-                              : undefined
-                          }
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleNavClick(link.href);
-                          }}
-                          className="text-cream/55 hover:text-gold text-sm transition-colors duration-200"
-                        >
-                          {link.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Practice areas */}
-                <div>
-                  <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">
-                    Practice Areas
-                  </h4>
-                  <ul className="space-y-2.5">
-                    {PRACTICE_AREAS.map((a) => (
-                      <li key={a.title}>
-                        <button
-                          type="button"
-                          onClick={() => scrollTo("#practice")}
-                          className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 text-left"
-                        >
-                          {a.title}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Contact */}
-                <div>
-                  <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">
-                    Contact
-                  </h4>
-                  <ul className="space-y-3">
-                    <li>
-                      <a
-                        href="mailto:sachinupadhayay146@gmail.com"
-                        className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 flex items-center gap-2"
-                      >
-                        <span className="text-gold">✉</span>
-                        sachinupadhayay146@gmail.com
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="https://instagram.com/its_adv_sachin"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 flex items-center gap-2"
-                      >
-                        <span className="text-gold">📷</span>
-                        @its_adv_sachin
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <p className="text-cream/45 text-xs text-center sm:text-left">
-                  © {currentYear} UPADHYAY LAW CHAMBERS | Adv. Sachin Upadhyay.
-                  All rights reserved.
-                </p>
-                <p className="text-cream/35 text-xs text-center">
-                  Built with <span className="text-red-400">♥</span> using{" "}
-                  <a
-                    href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gold hover:text-gold-light transition-colors duration-200"
-                  >
-                    caffeine.ai
-                  </a>
-                </p>
-              </div>
+                </li>
+              </ul>
             </div>
-          </footer>
-        </>
-      )}
+          </div>
+
+          <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-cream/45 text-xs text-center sm:text-left">
+              © {currentYear} UPADHYAY LAW CHAMBERS | Adv. Sachin Upadhyay. All
+              rights reserved.
+            </p>
+            <p className="text-cream/35 text-xs text-center">
+              Built with <span className="text-red-400">♥</span> using{" "}
+              <a
+                href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold hover:text-gold-light transition-colors duration-200"
+              >
+                caffeine.ai
+              </a>
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
