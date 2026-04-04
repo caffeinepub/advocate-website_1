@@ -1025,7 +1025,7 @@ export default function App() {
                     transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
                   },
                 }}
-                className="inline-block text-gold tracking-widest"
+                className="inline-block text-white tracking-widest whitespace-nowrap"
               >
                 UPADHYAY LAW CHAMBERS
               </motion.span>
@@ -1091,7 +1091,7 @@ export default function App() {
               </a>
               <div className="border-t border-gold/20" />
               <a
-                href="mailto:sachinupadhayay146@gmail.com"
+                href="mailto:upadhyaylawchambers1@gmail.com"
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
               >
                 <Mail className="h-3.5 w-3.5 text-gold flex-shrink-0" />
@@ -1100,13 +1100,13 @@ export default function App() {
                     Email
                   </div>
                   <div className="text-cream text-xs">
-                    sachinupadhayay146@gmail.com
+                    upadhyaylawchambers1@gmail.com
                   </div>
                 </div>
               </a>
               <div className="border-t border-gold/20" />
               <a
-                href="https://instagram.com/its_adv_sachin"
+                href="https://instagram.com/upadhyay_law_chambers"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
@@ -1116,7 +1116,9 @@ export default function App() {
                   <div className="text-gold text-[9px] font-semibold tracking-widest uppercase leading-none mb-0.5">
                     Instagram
                   </div>
-                  <div className="text-cream text-xs">@its_adv_sachin</div>
+                  <div className="text-cream text-xs">
+                    @upadhyay_law_chambers
+                  </div>
                 </div>
               </a>
             </motion.div>
@@ -1620,22 +1622,22 @@ export default function App() {
               <ul className="space-y-3">
                 <li>
                   <a
-                    href="mailto:sachinupadhayay146@gmail.com"
+                    href="mailto:upadhyaylawchambers1@gmail.com"
                     className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 flex items-center gap-2"
                   >
                     <span className="text-gold">✉</span>
-                    sachinupadhayay146@gmail.com
+                    upadhyaylawchambers1@gmail.com
                   </a>
                 </li>
                 <li>
                   <a
-                    href="https://instagram.com/its_adv_sachin"
+                    href="https://instagram.com/upadhyay_law_chambers"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-cream/55 hover:text-gold text-sm transition-colors duration-200 flex items-center gap-2"
                   >
                     <span className="text-gold">📷</span>
-                    @its_adv_sachin
+                    @upadhyay_law_chambers
                   </a>
                 </li>
               </ul>
